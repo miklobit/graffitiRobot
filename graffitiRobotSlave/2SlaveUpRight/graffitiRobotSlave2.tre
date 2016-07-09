@@ -1,0 +1,7 @@
+ÀÄgraffitiRobotSlave2
+   ÃÄMAIN  0/142  Ram=0
+   ³  ÃÄ??0??
+   ³  ÀÄ@const80  0/12  Ram=0
+   ÀÄSSP_isr  0/82  Ram=1
+      ÃÄ@I2C_WRITE_1  (Inline)  Ram=1
+      ÀÄinterpreta  (Inline)  Ram=0

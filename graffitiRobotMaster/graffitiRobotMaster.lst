@@ -1,11 +1,11 @@
-CCS PCM C Compiler, Version 4.104, 5967               08-Jul-16 20:11
+CCS PCM C Compiler, Version 4.104, 5967               08-Jul-16 23:54
 
-               Filename: c:\users\nahuel\documents\github\microcontroladores\graffitirobot\graffitirobotmaster\graffitiRobotMaster.lst
+               Filename: C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotMaster\graffitiRobotMaster.lst
 
-               ROM used: 555 words (7%)
+               ROM used: 564 words (7%)
                          Largest free fragment is 2048
                RAM used: 37 (10%) at main() level
-                         44 (12%) worst case
+                         48 (13%) worst case
                Stack:    3 worst case (2 in main + 1 for interrupts)
 
 *
@@ -92,7 +92,7 @@ CCS PCM C Compiler, Version 4.104, 5967               08-Jul-16 20:11
 ....................  
 .................... #use delay(clock=20000000) 
 *
-0162:  MOVLW  43
+0162:  MOVLW  47
 0163:  MOVWF  04
 0164:  BCF    03.7
 0165:  MOVF   00,W
@@ -124,7 +124,7 @@ CCS PCM C Compiler, Version 4.104, 5967               08-Jul-16 20:11
 00E5:  MOVWF  07
 00E6:  NOP
 00E7:  BCF    03.5
-00E8:  RLF    43,F
+00E8:  RLF    47,F
 00E9:  BCF    07.4
 00EA:  BTFSS  03.0
 00EB:  GOTO   0F2
@@ -194,8 +194,8 @@ CCS PCM C Compiler, Version 4.104, 5967               08-Jul-16 20:11
 .................... #BYTE PORTA = 0x05 
 .................... #BYTE TRISA = 0x85 
 ....................  
-.................... #BYTE PORTB = 0x06 
-.................... #BYTE TRISB = 0x86 
+.................... #BYTE PORTC = 0x06 
+.................... #BYTE TRISC = 0x86 
 ....................  
 ....................  
 .................... char comando[LONGI_BUF];            // array para recibir las cadenas de caracteres de los comandos (buffer de recepci贸n) 
@@ -203,6 +203,8 @@ CCS PCM C Compiler, Version 4.104, 5967               08-Jul-16 20:11
 .................... unsigned int8 cmd;                  // -Flag para indicar que se hay recepci贸n de mensaje en curso (para evitar interpretar 
 .................... unsigned int8 estado;               //variable de estado del master 
 .................... unsigned int8 estadoAnterior;        //variable que lleva el registro del estado anterior del master 
+.................... const unsigned int8 dirEsclavo1 = 0x10; 
+.................... const unsigned int8 dirEsclavo2 = 0x20; 
 ....................  
 .................... /* get16(k) - Funci髇 auxiliar que devuelve el valor num閞ico (int16) de una cadena decimal  
 .................... a partir del elemento k hasta encontrar el caracter null (similar a atoi o atol)*/ 
@@ -311,16 +313,16 @@ CCS PCM C Compiler, Version 4.104, 5967               08-Jul-16 20:11
 013F:  MOVWF  07
 .................... 	i2c_write(direccion);      // Direcci贸n del esclavo en el bus I2C 
 0140:  BCF    03.5
-0141:  MOVF   40,W
-0142:  MOVWF  43
+0141:  MOVF   44,W
+0142:  MOVWF  47
 0143:  CALL   0DE
 .................... 	i2c_write(caracter);      // Caracter representativo del comando solicitado 
-0144:  MOVF   41,W
-0145:  MOVWF  43
+0144:  MOVF   45,W
+0145:  MOVWF  47
 0146:  CALL   0DE
 .................... 	i2c_write(numero);      // Numero complemento del comando 
-0147:  MOVF   42,W
-0148:  MOVWF  43
+0147:  MOVF   46,W
+0148:  MOVWF  47
 0149:  CALL   0DE
 .................... 	i2c_stop();                // Fin comunicaci贸n 
 014A:  BCF    27.4
@@ -347,7 +349,7 @@ CCS PCM C Compiler, Version 4.104, 5967               08-Jul-16 20:11
 .................... 	delay_ms(50); 
 015F:  MOVLW  32
 0160:  BCF    03.5
-0161:  MOVWF  43
+0161:  MOVWF  47
 .................... } 
 *
 0175:  RETURN
@@ -361,10 +363,10 @@ CCS PCM C Compiler, Version 4.104, 5967               08-Jul-16 20:11
 003A:  BTFSS  0C.5
 003B:  GOTO   03A
 003C:  MOVF   1A,W
-003D:  MOVWF  44
+003D:  MOVWF  48
 .................... 	switch(dato) 
 .................... 	{ 
-003E:  MOVF   44,W
+003E:  MOVF   48,W
 003F:  XORLW  3A
 0040:  BTFSC  03.2
 0041:  GOTO   046
@@ -410,7 +412,7 @@ CCS PCM C Compiler, Version 4.104, 5967               08-Jul-16 20:11
 0075:  ADDWF  3C,W
 0076:  MOVWF  04
 0077:  BCF    03.7
-0078:  MOVF   44,W
+0078:  MOVF   48,W
 0079:  MOVWF  00
 .................... 				i++;					//incrementa contador i 
 007A:  INCF   3C,F
@@ -481,7 +483,7 @@ CCS PCM C Compiler, Version 4.104, 5967               08-Jul-16 20:11
 .................... 	TRISA = 0x00; 
 019C:  BSF    03.5
 019D:  CLRF   05
-.................... 	TRISB = 0x06; 
+.................... 	TRISC = 0x06; 
 019E:  MOVLW  06
 019F:  MOVWF  06
 ....................     
@@ -563,27 +565,27 @@ CCS PCM C Compiler, Version 4.104, 5967               08-Jul-16 20:11
 01D9:  GOTO   1ED
 01DA:  XORLW  01
 01DB:  BTFSC  03.2
-01DC:  GOTO   207
+01DC:  GOTO   20C
 01DD:  XORLW  02
 01DE:  BTFSC  03.2
-01DF:  GOTO   224
+01DF:  GOTO   22D
 01E0:  XORLW  06
 01E1:  BTFSC  03.2
-01E2:  GOTO   225
+01E2:  GOTO   22E
 01E3:  XORLW  08
 01E4:  BTFSC  03.2
-01E5:  GOTO   226
+01E5:  GOTO   22F
 01E6:  XORLW  18
 01E7:  BTFSC  03.2
-01E8:  GOTO   227
+01E8:  GOTO   230
 01E9:  XORLW  28
 01EA:  BTFSC  03.2
-01EB:  GOTO   228
-01EC:  GOTO   229
+01EB:  GOTO   231
+01EC:  GOTO   232
 .................... 			case 0x00:					//Solicitar desenergizar motores a los esclavos 
 .................... 				if(estadoAnterior & 0x01) 
 01ED:  BTFSS  3F.0
-01EE:  GOTO   206
+01EE:  GOTO   20B
 .................... 				{ 
 .................... 					estadoAnterior = estado; 
 01EF:  MOVF   3E,W
@@ -596,85 +598,98 @@ CCS PCM C Compiler, Version 4.104, 5967               08-Jul-16 20:11
 01F5:  MOVWF  0F
 01F6:  BCF    03.6
 01F7:  CALL   096
-.................... 					Envio_I2C(0x01 , 'P', 0); 
-01F8:  MOVLW  01
+.................... 					char orden = 'P'; 
+.................... 					int8 opcion = 0x00; 
+01F8:  MOVLW  50
 01F9:  MOVWF  40
-01FA:  MOVLW  50
-01FB:  MOVWF  41
-01FC:  CLRF   42
-01FD:  CALL   128
-.................... 					Envio_I2C(0x02 , 'P', 0); 
-01FE:  MOVLW  02
-01FF:  MOVWF  40
-0200:  MOVLW  50
-0201:  MOVWF  41
-0202:  CLRF   42
-0203:  CALL   128
+01FA:  CLRF   41
+.................... 					Envio_I2C(dirEsclavo1 , orden, opcion); 
+01FB:  MOVLW  10
+01FC:  MOVWF  44
+01FD:  MOVF   40,W
+01FE:  MOVWF  45
+01FF:  MOVF   41,W
+0200:  MOVWF  46
+0201:  CALL   128
+.................... 					Envio_I2C(dirEsclavo2 , orden, opcion); 
+0202:  MOVLW  20
+0203:  MOVWF  44
+0204:  MOVF   40,W
+0205:  MOVWF  45
+0206:  MOVF   41,W
+0207:  MOVWF  46
+0208:  CALL   128
 .................... 					PORTA = estado; 
-0204:  MOVF   3E,W
-0205:  MOVWF  05
+0209:  MOVF   3E,W
+020A:  MOVWF  05
 .................... 				} 
 .................... 				break; 
-0206:  GOTO   229
+020B:  GOTO   232
 .................... 			case 0x01:					//Solicitar energizar motores a los esclavos 
 .................... 				if (estadoAnterior == 0x00) 
-0207:  MOVF   3F,F
-0208:  BTFSS  03.2
-0209:  GOTO   223
+020C:  MOVF   3F,F
+020D:  BTFSS  03.2
+020E:  GOTO   22C
 .................... 				{ 
 .................... 					estadoAnterior = estado; 
-020A:  MOVF   3E,W
-020B:  MOVWF  3F
+020F:  MOVF   3E,W
+0210:  MOVWF  3F
 .................... 					printf("Energizando...\r"); 
-020C:  MOVLW  8E
-020D:  BSF    03.6
-020E:  MOVWF  0D
-020F:  MOVLW  00
-0210:  MOVWF  0F
-0211:  BCF    03.6
-0212:  CALL   096
-.................... 					Envio_I2C(0x01 , 'P', 1); 
-0213:  MOVLW  01
-0214:  MOVWF  40
-0215:  MOVLW  50
-0216:  MOVWF  41
-0217:  MOVLW  01
-0218:  MOVWF  42
-0219:  CALL   128
-.................... 					Envio_I2C(0x02 , 'P', 1); 
-021A:  MOVLW  02
-021B:  MOVWF  40
-021C:  MOVLW  50
-021D:  MOVWF  41
-021E:  MOVLW  01
-021F:  MOVWF  42
-0220:  CALL   128
+0211:  MOVLW  8E
+0212:  BSF    03.6
+0213:  MOVWF  0D
+0214:  MOVLW  00
+0215:  MOVWF  0F
+0216:  BCF    03.6
+0217:  CALL   096
+.................... 					char orden = 'P'; 
+.................... 					int8 opcion = 0x01; 
+0218:  MOVLW  50
+0219:  MOVWF  42
+021A:  MOVLW  01
+021B:  MOVWF  43
+.................... 					Envio_I2C(dirEsclavo1 , orden, opcion); 
+021C:  MOVLW  10
+021D:  MOVWF  44
+021E:  MOVF   42,W
+021F:  MOVWF  45
+0220:  MOVF   43,W
+0221:  MOVWF  46
+0222:  CALL   128
+.................... 					Envio_I2C(dirEsclavo2 , orden, opcion); 
+0223:  MOVLW  20
+0224:  MOVWF  44
+0225:  MOVF   42,W
+0226:  MOVWF  45
+0227:  MOVF   43,W
+0228:  MOVWF  46
+0229:  CALL   128
 .................... 					PORTA = estado; 
-0221:  MOVF   3E,W
-0222:  MOVWF  05
+022A:  MOVF   3E,W
+022B:  MOVWF  05
 .................... 				} 
 .................... 				break; 
-0223:  GOTO   229
+022C:  GOTO   232
 .................... 			case 0x03:					//Solicitar hacer homing a los esclavos 
 .................... 				break; 
-0224:  GOTO   229
+022D:  GOTO   232
 .................... 			case 0x05:					//Esperando ordenes de dibujo (Punto de Inicio y Punto de Final) 
 .................... 				break; 
-0225:  GOTO   229
+022E:  GOTO   232
 .................... 			case 0x0D:					//Enviar coordenadas de inicio a los esclavos 
 .................... 				break; 
-0226:  GOTO   229
+022F:  GOTO   232
 .................... 			case 0x15:					//Enviar valor de interrupcion de timer a los esclavos 
 .................... 				break; 
-0227:  GOTO   229
+0230:  GOTO   232
 .................... 			case 0x3D:					//Enviar coordenadas de final a los esclavos 
 .................... 				break; 
-0228:  GOTO   229
+0231:  GOTO   232
 .................... 			} 
 .................... 	} 
-0229:  GOTO   1D7
+0232:  GOTO   1D7
 .................... } 
-022A:  SLEEP
+0233:  SLEEP
 
 Configuration Fuses:
    Word  1: 2CF2   HS NOWDT NOPUT MCLR NOPROTECT NOCPD NOBROWNOUT IESO FCMEN NOLVP NODEBUG

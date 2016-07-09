@@ -1,12 +1,15 @@
 004-005 @READ_PROGRAM_MEMORY8.P1
 004     @WRITE_PROGRAM_MEMORY8.P2
 005     PORTA
-006     PORTC
-015     CCP_1
+006     PORTB
+007.0   PORTC0
+007.1   PORTC1
+007.2   PORTC2
 015     CCP_1_LOW
+015     CCP_1
 016     CCP_1_HIGH
-01B     CCP_2_LOW
 01B     CCP_2
+01B     CCP_2_LOW
 01C     CCP_2_HIGH
 020     @INTERRUPT_AREA
 021     @INTERRUPT_AREA
@@ -16,26 +19,15 @@
 025     @INTERRUPT_AREA
 026     @INTERRUPT_AREA
 027     @TRIS_C
-028-03B comando
-03C     i
-03D     cmd
-03E     estado
-03F     estadoAnterior
-040     orden
-041     opcion
-042     orden
-043     opcion
-044     Envio_I2C.direccion
-044     @PSTRINGC7_9600_62_63.@SCRATCH1
-045     Envio_I2C.caracter
-045     @PSTRINGC7_9600_62_63.@SCRATCH2
-046     Envio_I2C.numero
-046     @PSTRINGC7_9600_62_63.@SCRATCH3
-047     @delay_ms1.P1
-047     @I2C_WRITE_1.P2
-048     RDA_isr.dato
-049     RDA_isr.@SCRATCH1
-04A     RDA_isr.@SCRATCH2
+028     estado
+029     estadoAnterior
+02A     fstate
+02B     numero
+02C     orden
+02D     @I2C_STATE
+02E     MAIN.stepIndex
+02F     SSP_isr.incoming
+030     @I2C_WRITE_1.P1
 077     @SCRATCH
 078     @SCRATCH
 078     _RETURN_
@@ -43,12 +35,15 @@
 07A     @SCRATCH
 07F     @INTERRUPT_AREA
 085     TRISA
-086     TRISC
+086     TRISB
+087.0   TRISC0
+087.1   TRISC1
+087.2   TRISC2
 0FF     @INTERRUPT_AREA
 107.6   C1OUT
 108.6   C2OUT
-10D-10E @READ_PROGRAM_MEMORY8.P1
-10D-10E @WRITE_PROGRAM_MEMORY8.P2
+10D-10E @WRITE_PROGRAM_MEMORY8.P1
+10D-10E @READ_PROGRAM_MEMORY8.P2
 17F     @INTERRUPT_AREA
 1FF     @INTERRUPT_AREA
 27F     @INTERRUPT_AREA
@@ -81,17 +76,12 @@ F7F     @INTERRUPT_AREA
 FFF     @INTERRUPT_AREA
 
 ROM Allocation:
-0162  @delay_ms1
-00DE  @I2C_WRITE_1
-0051  interpreta
-0128  Envio_I2C
-003A  RDA_isr
-0080  SSP_isr
-0176  MAIN
-0084  @const103
-0096  @PSTRINGC7_9600_62_63
-008E  @const107
-0176  @cinit
+0052  @I2C_WRITE_1
+0031  STEP
+006F  interpreta
+003D  SSP_isr
+008F  MAIN
+008F  @cinit
 
 
 User Memory space: 
@@ -99,15 +89,15 @@ User Memory space:
 User Memory space: 
 
 Project Directory:
-    C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotMaster\
+    C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\2SlaveUpRight\
 
 Project Files:
-    graffitiRobotMaster.c
-    graffitiRobotMaster.h
-    ..\..\..\..\..\..\..\Program Files\PICC\devices\16F886.h
+    graffitiRobotSlave2.c
+    graffitiRobotSlave2.h
+    ..\..\..\..\..\..\..\..\Program Files\PICC\devices\16F886.h
 
 Units:
-    C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotMaster\graffitiRobotMaster (main)
+    C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\2SlaveUpRight\graffitiRobotSlave2 (main)
 
 Compiler Settings:
     Processor:      PIC16F886
@@ -118,12 +108,12 @@ Compiler Settings:
     Float,Double:   32,32
 
 Output Files:
-    Errors:      graffitiRobotMaster.err
-    Ext Symbols: graffitiRobotMaster.esym
-    INHX8:       graffitiRobotMaster.hex
-    Symbols:     graffitiRobotMaster.sym
-    List:        graffitiRobotMaster.lst
-    Debug/COFF:  graffitiRobotMaster.cof
-    Project:     graffitiRobotMaster.PJT
-    Call Tree:   graffitiRobotMaster.tre
-    Statistics:  graffitiRobotMaster.sta
+    Errors:      graffitiRobotSlave2.err
+    Ext Symbols: graffitiRobotSlave2.esym
+    INHX8:       graffitiRobotSlave2.hex
+    Symbols:     graffitiRobotSlave2.sym
+    List:        graffitiRobotSlave2.lst
+    Debug/COFF:  graffitiRobotSlave2.cof
+    Project:     graffitiRobotSlave2.PJT
+    Call Tree:   graffitiRobotSlave2.tre
+    Statistics:  graffitiRobotSlave2.sta

@@ -5,6 +5,8 @@ unsigned int8 i;                     // -indice para apuntar a los elementos den
 unsigned int8 cmd;                  // -Flag para indicar que se hay recepciÃ³n de mensaje en curso (para evitar interpretar
 unsigned int8 estado;               //variable de estado del master
 unsigned int8 estadoAnterior;        //variable que lleva el registro del estado anterior del master
+const unsigned int8 dirEsclavo1 = 0x10;
+const unsigned int8 dirEsclavo2 = 0x20;
 
 /* get16(k) - Función auxiliar que devuelve el valor numérico (int16) de una cadena decimal 
 a partir del elemento k hasta encontrar el caracter null (similar a atoi o atol)*/
@@ -106,7 +108,7 @@ void main()
 	estado = 0x00;						//Representa el estado del master
 	estadoAnterior = 0x01;				//Definido con un valor diferente a estado solo a fines de que pase por el primer bucle de desenergizado
 	TRISA = 0x00;
-	TRISB = 0x06;
+	TRISC = 0x06;
    
 	//char orden;
 
@@ -131,8 +133,10 @@ void main()
 				{
 					estadoAnterior = estado;
 					printf("Desenergizando...\r");
-					Envio_I2C(0x01 , 'P', 0);
-					Envio_I2C(0x02 , 'P', 0);
+					char orden = 'P';
+					int8 opcion = 0x00;
+					Envio_I2C(dirEsclavo1 , orden, opcion);
+					Envio_I2C(dirEsclavo2 , orden, opcion);
 					PORTA = estado;
 				}
 				break;
@@ -141,8 +145,10 @@ void main()
 				{
 					estadoAnterior = estado;
 					printf("Energizando...\r");
-					Envio_I2C(0x01 , 'P', 1);
-					Envio_I2C(0x02 , 'P', 1);
+					char orden = 'P';
+					int8 opcion = 0x01;
+					Envio_I2C(dirEsclavo1 , orden, opcion);
+					Envio_I2C(dirEsclavo2 , orden, opcion);
 					PORTA = estado;
 				}
 				break;

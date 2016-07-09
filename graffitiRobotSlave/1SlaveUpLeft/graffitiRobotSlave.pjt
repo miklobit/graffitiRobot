@@ -3,6 +3,7 @@ Target=C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffit
 Development_Mode=
 Processor_Text=PIC16F886
 ToolSuite=CCS
+Processor=0x886F
 [C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\1SlaveUpLeft\graffitiRobotSlave]
 Type=4
 Path=
@@ -19,5 +20,6 @@ Link=0
 Count=1
 1=C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\1SlaveUpLeft\graffitiRobotSlave
 [Opened Files]
-1=graffitiRobotSlave.c
-2=
+1=..\1SlaveUpLeft\graffitiRobotSlave.c
+2=graffitiRobotSlave.h
+3=

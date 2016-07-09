@@ -17,7 +17,7 @@
 #FUSES RESERVED              	//Used to set the reserved FUSE bits
 
 #use delay(clock=20000000)
-#use i2c(Slave,Fast,sda=PIN_C4,scl=PIN_C3,address=0x10)
+#use i2c(Slave,Fast,sda=PIN_C4,scl=PIN_C3,address=0x20)
 
 #BYTE PORTA = 0x05
 #BYTE TRISA = 0x85
