@@ -1,5 +1,4 @@
 # Writing all output to: C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobot.log
-Warning - No placement data found !
 set pad_wire_necking on
 bus diagonal
 fanout 5

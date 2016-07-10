@@ -20,5 +20,6 @@ Link=0
 Count=1
 1=C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\2SlaveUpRight\graffitiRobotSlave2
 [Opened Files]
-1=graffitiRobotSlave2.c
-2=
+1=..\2SlaveUpRight\graffitiRobotSlave2.c
+2=graffitiRobotSlave2.h
+3=

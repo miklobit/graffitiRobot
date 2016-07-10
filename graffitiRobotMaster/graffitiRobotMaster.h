@@ -19,11 +19,11 @@
 #use delay(clock=20000000)
 #use rs232(baud=9600,parity=N,xmit=PIN_C6,rcv=PIN_C7,bits=8)
 #use i2c(Master,Fast,sda=PIN_C4,scl=PIN_C3)
-
 #define LONGI_BUF   20
 
 #BYTE PORTA = 0x05
 #BYTE TRISA = 0x85
 
-#BYTE PORTC = 0x06
-#BYTE TRISC = 0x86
+#BYTE PORTC = 0x07
+#BYTE TRISC = 0x87
+

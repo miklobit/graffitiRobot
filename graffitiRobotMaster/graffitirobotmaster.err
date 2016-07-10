@@ -1,2 +1,4 @@
-      Memory usage:   ROM=7%      RAM=10% - 13%
-      0 Errors,  0 Warnings.
+>>> Warning 216 "graffitiRobotMaster.c" Line 244(0,1): Interrupts disabled during call to prevent re-entrancy:  (@I2C_WRITE_1)
+>>> Warning 216 "graffitiRobotMaster.c" Line 244(0,1): Interrupts disabled during call to prevent re-entrancy:  (@delay_ms1)
+      Memory usage:   ROM=15%      RAM=11% - 15%
+      0 Errors,  2 Warnings.

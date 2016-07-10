@@ -77,5 +77,216 @@
   )
   )
   (network_out
+   (Net #00010 
+   (rule
+   )
+   (wire (path BOT 25400  381000 3683000 381000 1333500 0 1333500
+     0 762000)
+    (connect (terminal pin "SLAVE1-UP LEFT"-11) (terminal pin MASTER-10))
+   )
+   (wire (path BOT 25400  0 762000 0 -1775951 381000 -1775951
+     381000 -2159000)
+    (connect (terminal pin MASTER-10) (terminal pin "SLAVE2-UP RIGHT"-11))
+   )
+   )
+   (Net #00011 
+   (rule
+   )
+   (wire (path BOT 25400  635000 3683000 635000 1112135 254000 1112135
+     254000 762000)
+    (connect (terminal pin "SLAVE1-UP LEFT"-12) (terminal pin MASTER-11))
+   )
+   )
+   (Net #00019 
+   (rule
+   )
+   (wire (path BOT 25400  762000 1524000 762000 4191000 889000 4191000
+     889000 4445000)
+    (connect (terminal pin MASTER-14) (terminal pin "SLAVE1-UP LEFT"-14))
+   )
+   (wire (path BOT 25400  762000 1524000 762000 1270000 889000 1270000
+     889000 -1397000)
+    (connect (terminal pin MASTER-14) (terminal pin "SLAVE2-UP RIGHT"-14))
+   )
+   )
+   (Net #00020 
+   (rule
+   )
+   (wire (path TOP 25400  762000 762000 762000 1016000 889000 1016000
+     889000 3683000)
+    (connect (terminal pin MASTER-13) (terminal pin "SLAVE1-UP LEFT"-13))
+   )
+   (wire (path BOT 25400  762000 -762000 762000 762000)
+    (connect (terminal wire) (terminal pin MASTER-13))
+    (attr bus)
+   )
+   (wire (path BOT 25400  889000 -2159000 762000 -2032000 762000 -762000)
+    (connect (terminal pin "SLAVE2-UP RIGHT"-13) (terminal wire))
+    (attr bus)
+   )
+   )
+   (Net #00021 
+   (rule
+   )
+   (wire (path BOT 25400  635000 -2159000 508000 -2032000 508000 762000)
+    (connect (terminal pin "SLAVE2-UP RIGHT"-12) (terminal pin MASTER-12))
+    (attr bus)
+   )
+   )
+   (Net #00024 
+   (rule
+   )
+   )
+   (Net #00032 
+   (rule
+   )
+   (wire (path TOP 25400  4318000 762000 4318000 -359064 -635000 -359064
+     -635000 -1397000)
+    (connect (terminal pin U4-7) (terminal pin "SLAVE2-UP RIGHT"-20))
+   )
+   )
+   (Net #00033 
+   (rule
+   )
+   (wire (path TOP 25400  4064000 762000 4064000 127000 -889000 127000
+     -889000 -1397000)
+    (connect (terminal pin U4-6) (terminal pin "SLAVE2-UP RIGHT"-21))
+   )
+   )
+   (Net #00034 
+   (rule
+   )
+   (wire (path TOP 25400  -1143000 -1397000 -1143000 381000 3810000 381000
+     3810000 762000)
+    (connect (terminal pin "SLAVE2-UP RIGHT"-22) (terminal pin U4-5))
+   )
+   )
+   (Net #00037 
+   (rule
+   )
+   (wire (path TOP 25400  127000 -2159000 127000 -1609729 -1270000 -1609729
+     -1270000 -991922 -1237000 -991922 -1237000 -254000)
+    (connect (terminal pin "SLAVE2-UP RIGHT"-10) (terminal smd R5-1))
+   )
+   )
+   (Net #00046 
+   (rule
+   )
+   (wire (path BOT 25400  3556000 762000 3556000 -2349500 -1270000 -2349500
+     -1270000 -1651000 -1397000 -1651000 -1397000 -1397000)
+    (connect (terminal pin U4-4) (terminal pin "SLAVE2-UP RIGHT"-23))
+   )
+   )
+   (Net #00047 
+   (rule
+   )
+   )
+   (Net #00055 
+   (rule
+   )
+   (wire (path TOP 25400  3302000 762000 3302000 1016000 3175000 1016000
+     3175000 4254500 -635000 4254500 -635000 4445000)
+    (connect (terminal pin U4-3) (terminal pin "SLAVE1-UP LEFT"-20))
+   )
+   )
+   (Net #00056 
+   (rule
+   )
+   (wire (path BOT 25400  3048000 762000 3048000 508000 1223250 508000
+     1223250 4572000 -254000 4572000 -254000 4318000 -889000 4318000
+     -889000 4445000)
+    (connect (terminal pin U4-2) (terminal pin "SLAVE1-UP LEFT"-21))
+   )
+   )
+   (Net #00057 
+   (rule
+   )
+   (wire (path BOT 25400  2794000 762000 2794000 635000 2154913 635000
+     2154913 4635500 -1143000 4635500 -1143000 4445000)
+    (connect (terminal pin U4-1) (terminal pin "SLAVE1-UP LEFT"-22))
+   )
+   )
+   (Net #00060 
+   (rule
+   )
+   (wire (path TOP 25400  127000 3683000 127000 2794000 -1237000 2794000)
+    (connect (terminal pin "SLAVE1-UP LEFT"-10) (terminal smd R1-1))
+   )
+   )
+   (Net #00069 
+   (rule
+   )
+   (wire (path BOT 25400  2540000 762000 2540000 1016000 2316272 1016000
+     2316272 4762500 -1397000 4762500 -1397000 4445000)
+    (connect (terminal pin U4-0) (terminal pin "SLAVE1-UP LEFT"-23))
+   )
+   )
+   (Net #00070 
+   (rule
+   )
+   )
+   (Net #00073 
+   (rule
+   )
+   )
+   (Net GND 
+   (rule
+   )
+   (wire (path TOP 25400  -127000 571500 3683000 571500 3683000 952500
+     4572000 952500 4572000 762000)
+    (connect (terminal via) (terminal pin U4-8))
+   )
+   (wire (path BOT 25400  -254000 3492500 -254000 1524000)
+    (connect (terminal wire) (terminal pin MASTER-18))
+   )
+   (wire (path TOP 25400  -635000 3683000 -635000 3492500 -1397000 3492500
+     -1397000 2794000)
+    (connect (terminal pin "SLAVE1-UP LEFT"-7) (terminal smd R1-0))
+   )
+   (wire (path TOP 25400  -762000 571500 -1397000 571500 -1397000 -254000)
+    (connect (terminal wire) (terminal smd R5-0))
+   )
+   (wire (path BOT 25400  -254000 3492500 -254000 4191000 -127000 4191000
+     -127000 4445000)
+    (connect (terminal wire) (terminal pin "SLAVE1-UP LEFT"-18))
+   )
+   (wire (path BOT 25400  -254000 3492500 -635000 3492500 -635000 3683000)
+    (connect (terminal wire) (terminal pin "SLAVE1-UP LEFT"-7))
+   )
+   (wire (path BOT 25400  -635000 -2159000 -635000 -1954180 -127000 -1954180
+     -127000 -1397000)
+    (connect (terminal pin "SLAVE2-UP RIGHT"-7) (terminal pin "SLAVE2-UP RIGHT"-18))
+   )
+   (wire (path BOT 25400  -254000 1524000 -254000 1270000 -127000 1270000
+     -127000 571500)
+    (connect (terminal pin MASTER-18) (terminal via))
+   )
+   (wire (path BOT 25400  -127000 -1397000 -127000 571500)
+    (connect (terminal pin "SLAVE2-UP RIGHT"-18) (terminal via))
+   )
+   (wire (path TOP 25400  -127000 571500 -762000 571500)
+    (connect (terminal via) (terminal wire))
+   )
+   (wire (path TOP 25400  -762000 571500 -762000 762000)
+    (connect (terminal wire) (terminal pin MASTER-7))
+   )
+   (via $VIA_POWER -127000 571500)
+   )
+   (Net VCC/VDD 
+   (rule
+   )
+   (wire (path BOT 25400  -508000 1524000 -508000 1863242 -1016000 1863242
+     -1016000 4572000 -381000 4572000 -381000 4445000)
+    (connect (terminal pin MASTER-19) (terminal pin "SLAVE1-UP LEFT"-19))
+   )
+   (wire (path BOT 25400  -381000 635000 -381000 1397000 -508000 1524000)
+    (connect (terminal wire) (terminal pin MASTER-19))
+    (attr bus)
+   )
+   (wire (path BOT 25400  -381000 -1397000 -381000 635000)
+    (connect (terminal pin "SLAVE2-UP RIGHT"-19) (terminal wire))
+    (attr bus)
+   )
+   )
   )
  )

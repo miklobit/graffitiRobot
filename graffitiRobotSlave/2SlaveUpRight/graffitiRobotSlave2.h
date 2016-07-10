@@ -25,9 +25,5 @@
 #BYTE PORTB = 0x06
 #BYTE TRISB = 0x86
 
-#bit PORTC0 = 0x07.0
-#bit TRISC0 = 0x87.0
-#bit PORTC1 = 0x07.1
-#bit TRISC1 = 0x87.1
-#bit PORTC2 = 0x07.2
-#bit TRISC2 = 0x87.2
+#BYTE PORTC = 0x07
+#BYTE TRISC = 0x87

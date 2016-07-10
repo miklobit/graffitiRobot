@@ -18,6 +18,7 @@
 
 #use delay(clock=20000000)
 #use i2c(Slave,Fast,sda=PIN_C4,scl=PIN_C3,address=0x10)
+#use fast_io(A)
 
 #BYTE PORTA = 0x05
 #BYTE TRISA = 0x85
@@ -25,12 +26,5 @@
 #BYTE PORTB = 0x06
 #BYTE TRISB = 0x86
 
-#BYTE PORTC0 = 0x07.0
-#BYTE TRISC0 = 0x87.0
-#BYTE PORTC1 = 0x07.1
-#BYTE TRISC1 = 0x87.1
-#BYTE PORTC2 = 0x07.2
-#BYTE TRISC2 = 0x87.2
-
-
-#define LONGI_BUF   20
+#BYTE PORTC = 0x07
+#BYTE TRISC = 0x87
