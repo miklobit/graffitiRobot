@@ -1,27 +1,35 @@
 #include "C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotMaster\graffitiRobotMaster.h"
+//#include "C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotMaster\reducedmath.h"
+#include <math.h>
+/*****************************************************************************/
+/**********************        Variables Globales        *********************/
 
-char comando[LONGI_BUF];            // array para recibir las cadenas de caracteres de los comandos (buffer de recepci贸n)
-unsigned int8 i;                     // -indice para apuntar a los elementos dentro del array comando[]
-unsigned int8 cmd;                  // -Flag para indicar que se hay recepci贸n de mensaje en curso (para evitar interpretar
+/** Variables de estado **/
 unsigned int8 estado;               //variable de estado del master
 unsigned int8 estadoAnterior;        //variable que lleva el registro del estado anterior del master
+
+/** Variables para comunicaci髇 I2C**/
 const unsigned int8 dirEsclavo1 = 0x10;
 const unsigned int8 dirEsclavo2 = 0x20;
 char orden;				//variable para el envio de ordenes por I2C
 int8 opcion1, opcion2;	//variables para el envio de ordenes por I2C
 
-/* get16(k) - Funci髇 auxiliar que devuelve el valor num閞ico (int16) de una cadena decimal 
-a partir del elemento k hasta encontrar el caracter null (similar a atoi o atol)*/
-unsigned int16 get16(int k)
-{
-	unsigned int16 aux16=0;
-	while(comando[k]!=0)  // despu閟 de la cadena decimal hay un caracter null (ASCII 0)
-	{
-		aux16=aux16*10+comando[k]-'0'; //'0' es 48 en decimal o 0x30 en hexa 
-		k++;   
-	}  
-	return aux16;
-}
+/** Variables para comunicaci髇 UART**/
+char comando[LONGI_BUF];            // array para recibir las cadenas de caracteres de los comandos (buffer de recepci贸n)
+unsigned int8 ii;                     // -indice para apuntar a los elementos dentro del array comando[]
+unsigned int8 cmd;                  // -Flag para indicar que se hay recepci贸n de mensaje en curso (para evitar interpretar
+
+/** Variables para el calculo de coordenadas**/
+int16 xi, yi, xf, yf;	//variables de almacenamiento de las coordenadas cartesianas de la linea a dibujar
+short finalRecibido;
+int16 objIniEscIzq, objIniEscDer;
+int16 objFinEscIzq, objFinEscDer;
+const int16 anchoDibujo = 2500;		//MAX 2573.6-->> cantidad de pasos max 65535 y resoluci髇 de 0.9 grados
+/*-variables constructivas-*/
+const float32 pasoDist = 25.4648; //1paso/0.9grados*360grados/(pi*5)mm
+/** Variables para el calculo de tiempo de interrupcion de timers**/
+const int16 Vmax = 0xF03C;
+const int16 IntTimMin = 0x0FC3; //intervalo de interrupcion de la velocidad maxima 4036=65536-61500 (0x0FC4=0xFFFF-0xF03C)
 
 /******************************************************************************/
 /*********************  FUNCION ENVIO A PICS ESCLAVOS *************************/
@@ -54,6 +62,121 @@ void Lectura_I2C( int8 direccion, char caracter, int8 &estadoEsclavo) {
    delay_ms(50);           // Espera finalizaci髇 del envio
 }
 
+/******************************************************************************/
+/*************   FUNCION DE SETEO DE LOS TIMERS DE ESCLAVOS   *****************/
+/*- La funcion realiza el calculo y ordena a los esclavos actualizar el tiempo
+interrupcion de los timers para lograr un desplazamiento coordenado-*/
+void timersSetting(void)
+{
+	float32 distEscIzq = 0.00;
+	float32 distEscDer = 0.00;
+	int16 vel2 =0x00;
+	if (objIniEscIzq > objFinEscIzq)
+		distEscIzq = objIniEscIzq - objFinEscIzq;
+	else
+		distEscIzq = objFinEscIzq - objIniEscIzq;
+	if (objIniEscDer > objFinEscDer)
+		distEscDer = objIniEscDer - objFinEscDer;
+	else
+		distEscDer = objFinEscDer - objIniEscDer;
+
+	if (distEscDer < distEscIzq)
+	{
+		orden = 'T';
+		opcion1 = 0xF0;		//la velocidad m醲ima es a 0xF03C
+		opcion2 = 0x3C;
+		printf("Esclavo 1 -> Vmax (%lx)\r", Vmax);
+		Envio_I2C(dirEsclavo1, orden, opcion1, opcion2);
+		vel2 = 0xFFFF-(int16)((distEscIzq/distEscDer)*(float32)IntTimMin);	//Como el movimiento es coordinado (en el mismo tiempo), las velocidades son directamente proporcionales a las distancias
+		opcion1 = vel2 >> 8;
+		opcion2 = vel2;
+		printf("Esclavo 2 -> Vel = %lx\r", vel2);
+		Envio_I2C(dirEsclavo2, orden, opcion1, opcion2);
+	}
+	else if (distEscDer > distEscIzq)
+	{
+		orden = 'T';
+		vel2 = 0xFFFF-(int16)((distEscDer/distEscIzq)*(float32)IntTimMin);	//Como el movimiento es coordinado (en el mismo tiempo), las velocidades son directamente proporcionales a las distancias
+		opcion1 = vel2 >> 8;
+		opcion2 = vel2;
+		printf("Esclavo 1 -> Vel = %lx\r", vel2);
+		Envio_I2C(dirEsclavo1, orden, opcion1, opcion2);
+		opcion1 = 0xF0;		//la velocidad m醲ima es a 0xF03C
+		opcion2 = 0x3C;
+		printf("Esclavo 2 -> Vmax (%lx)\r", Vmax);
+		Envio_I2C(dirEsclavo2, orden, opcion1, opcion2);
+	}
+	else	//distEscDer==distEscIzq
+	{
+		orden = 'T';
+		opcion1 = 0xF0;		//la velocidad m醲ima es a 0xF03C
+		opcion2 = 0x3C;
+		printf("Esclavo 1 -> Vmax (%lx)\r", Vmax);
+		Envio_I2C(dirEsclavo1, orden, opcion1, opcion2);
+		printf("Esclavo 2 -> Vmax (%lx)\r", Vmax);
+		Envio_I2C(dirEsclavo2, orden, opcion1, opcion2);
+		//ordenar la misma veloc
+	}
+}
+
+/******************************************************************************/
+/*************   FUNCION PASO DE DISTANCIA A PASOS DE MOTOR   *****************/
+unsigned int16 distToPasos(float32 d)
+{
+	unsigned int16 pasos = d*pasoDist;
+	return pasos;
+}
+
+/******************************************************************************/
+/************   FUNCION PARA CALCULO DE OBJETIVOS DE ESCLAVOS   ***************/
+/**calculan la cantidad de pasos que deberia realizar cada motor para cumplir 
+con las coordenadas ordenadas**/
+unsigned int16 objetivoEsclavoIzq(float32 x, float32 y)
+{
+	float32 aux = sqrt( x*x + y*y );	//calculo la distancia del origen
+	return distToPasos(aux);			//la devuelvo transformada a pasos
+}
+
+unsigned int16 objetivoEsclavoDer(float32 x, float32 y)
+{
+	float32 xaux = anchoDibujo-x;			//para la otra esquina, la coord y es el complemento
+	float32 aux = sqrt( xaux*xaux + y*y);	//calculo la distancia del origen
+	return distToPasos(aux);				//la devuelvo transformada a pasos
+}
+
+/* get16(k) - Funci髇 auxiliar que devuelve el valor num閞ico (int16) de una cadena decimal 
+a partir del elemento k hasta encontrar el caracter null (similar a atoi o atol)*/
+unsigned int16 get16(int k)
+{
+	unsigned int16 aux16=0;
+	int i;
+	for (i = 0; i < 4; ++i)
+	{
+		aux16=aux16*10+comando[k+i]-'0'; //'0' es 48 en decimal o 0x30 en hexa 
+	}
+	return aux16;
+}
+
+/*****************************************************************************/
+/************** FUNCION PARA GUIAR A UN ESCLAVO A HACER EL HOMING ************/
+/**        ordena hacer homing a uno mientras ordena avanzar al otro        **/
+
+void doHoming(int8 dirEsclavoHoming, int8 dirEsclavoAvanza, int8 inputPinEsclavoHoming)
+{
+	orden = 'H';	
+	opcion1 = 0x00;											//orden H, opcion1 0x00 avanzar para permitir al otro esclavo hacer homing
+	Envio_I2C(dirEsclavoAvanza , orden, opcion1, opcion2);	//pedir avanzar a un esclavo
+	opcion1 = 0x01;											//orden H, opcion1 0x01 retroceder para hacer homing
+	Envio_I2C(dirEsclavoHoming , orden, opcion1, opcion2);	//pedir hacer homing al otro esclavo 	
+	//el esclavo1 pone un puerto en 1 hasta que termina de hacer homing
+	while(input(inputPinEsclavoHoming) == 0){								//esperar que el puerto este en 1, indicando que empezo a hacer el homing
+	}
+	while(input(inputPinEsclavoHoming) == 1){								//esperar que el puerto este en 0, indicando que termino el homing
+	}
+	orden = 'X';
+	Envio_I2C(dirEsclavoAvanza, orden, opcion1, opcion2);	//Orden de detener al esclavo que avanzaba
+}
+
 /*****************************************************************************/
 /********************** FUNCION INTERPRETA COMANDOS UART *********************/
 /**        interpreta los comandos contenidos en la cadena comando[]        **/
@@ -68,9 +191,11 @@ void interpreta(void)
 			switch(comando[1])
 			{
 				case '0':
+					estadoAnterior = estado;
 					estado = 0x00;
 					break;
 				case '1':
+					estadoAnterior = estado;
 					estado = 0x01;
 					break;
 			}
@@ -96,12 +221,47 @@ void interpreta(void)
 			break;
 		case 'h':
 		case 'H':
+			estadoAnterior = estado;
 			estado = 0x03;
 			break;	
-		case 't':
-		case 'T':
-			//aux16=get16(1);
-			//if(aux16<60000) tpaso=aux16;
+		case 'i':
+		case 'I':
+			if ((estado & 0x05) == 0x05)	//ha hecho homing y esta energizado
+			{
+				if (ii == 9)		//se recibio un 'I', cuatro digitos correspondientes a la coordenada x y cuatro correspondientes a la coordenada y
+				{
+					xi=get16(1);	//almaceno el numero ubicado en los caracteres 1 al 4 en xi
+					yi=get16(5);	//almaceno el numero ubicado en los caracteres 5 al 8 en xi
+					printf("Punto Inicial recibido (%ld , %ld)\r", xi, yi);
+					estadoAnterior = estado;
+					estado = 0x0D;
+				}
+				else
+				{
+					printf("Faltan datos.\rSintaxis del comando -> :Ixxxxyyyy\r");	//en caso de un mal ingreso de la informacion
+				}
+			}
+			else
+				printf("Motor sin referenciar. Hacer homing.\r");
+			break;
+		case 'f':
+		case 'F':
+			if (estado & 0x05)
+			{
+				if (ii == 9)		//se recibio un 'F', cuatro digitos correspondientes a la coordenada x y cuatro correspondientes a la coordenada y
+				{
+					xf=get16(1);	//almaceno el numero ubicado en los caracteres 1 al 4 en xf
+					yf=get16(5);	//almaceno el numero ubicado en los caracteres 5 al 8 en yf
+					printf("Punto Final recibido (%ld , %ld)\r", xf, yf);
+					finalRecibido = 1;
+				}
+				else
+				{
+					printf("Faltan datos.\rSintaxis del comando -> :Fxxxxyyyy\r");	//en caso de un mal ingreso de la informacion
+				}
+			}
+			else
+				printf("Motor sin referenciar. Hacer homing.\r");		
 			break;
 	}
 }
@@ -114,22 +274,22 @@ void  RDA_isr(void)
 	switch(dato)
 	{
 		case ':':						//si es delimitador de inicio 
-			i = 0;						//inicializa contador i
+			ii = 0;						//inicializa contador i
 			cmd = 1;					//y activa bandera que indica que hay comando en curso
 			break;      
 		case 13:						//si es delimitador de final 
 			if (cmd == 1)				// si hab铆a comando en curso
 			{
-				comando[i] = 0;			//termina cadena de comando con caracter null
+				comando[ii] = 0;			//termina cadena de comando con caracter null
 				interpreta();			//va a interpretar el comando
 				cmd = 0;				//desactiva bandera de comando en curso
 			}
 			break;
 		default:
-			if (i < LONGI_BUF)			//si contador menor que longitud del buffer
+			if (ii < LONGI_BUF)			//si contador menor que longitud del buffer
 			{
-				comando[i] = dato;		//pone caracter en cadena
-				i++;					//incrementa contador i
+				comando[ii] = dato;		//pone caracter en cadena
+				ii++;					//incrementa contador i
 			}
 			break;
 	}
@@ -145,8 +305,9 @@ void main(void)
 	bit_set(TRISC,1);	//RC1 entrada
 	bit_set(TRISC,2);	//RC2 entrada
 	
-	output_low(56);		//RC0=0
+	output_low(PIN_C0);		//RC0=0
 	
+	opcion1 = 0x00;
 	opcion2=0x00;
 
 	setup_adc_ports(NO_ANALOGS|VSS_VDD);
@@ -159,17 +320,17 @@ void main(void)
 	enable_interrupts(GLOBAL);
 //Setup_Oscillator parameter not selected from Intr Oscillator Config tab
 
-	printf("ok\r");
+	printf("OK\r");
 	for (;;)
 	{
 		switch(estado)
 		{
 			case 0x00:					//Solicitar desenergizar motores a los esclavos
-				orden = 'P';
 				if(estadoAnterior & 0x01)
 				{
-					estadoAnterior = estado;
+					estadoAnterior = 0x00;
 					printf("Desenergizando...\r");
+					orden = 'P';
 					opcion1 = 0x00;
 					Envio_I2C(dirEsclavo1 , orden, opcion1, opcion2);
 					Envio_I2C(dirEsclavo2 , orden, opcion1, opcion2);
@@ -179,8 +340,9 @@ void main(void)
 			case 0x01:					//Solicitar energizar motores a los esclavos
 				if (estadoAnterior == 0x00)
 				{
-					estadoAnterior = estado;
+					estadoAnterior = 0x01;
 					printf("Energizando...\r");
+					orden = 'P';
 					opcion1 = 0x01;
 					Envio_I2C(dirEsclavo1 , orden, opcion1, opcion2);
 					Envio_I2C(dirEsclavo2 , orden, opcion1, opcion2);
@@ -188,54 +350,94 @@ void main(void)
 				}
 				break;
 			case 0x03:						//Solicitar hacer homing a los esclavos
-				if(estadoAnterior & 0x01)
+				output_A(estado);
+				printf("Homing esclavo 1...\r");
+				doHoming(dirEsclavo1, dirEsclavo2, PIN_C1);
+				printf("Homing esclavo 2...\r");
+				doHoming(dirEsclavo2, dirEsclavo1, PIN_C2);
+				estadoAnterior = estado;
+				estado = 0x05;
+				break;
+			case 0x05:					//Esperando ordenes de dibujo (Punto de Inicio y Punto de Final)
+				if (estadoAnterior == 0x03)
 				{
 					estadoAnterior = estado;
 					output_A(estado);
-					orden = 'H';										
-
-					printf("Homing esclavo 1...\r");
-					opcion1 = 0x00;										//orden H, opcion1 0x00 avanzar para permitir al otro esclavo hacer homing
-					Envio_I2C(dirEsclavo2 , orden, opcion1, opcion2);	//pedir avanzar a esclavo 2
-					opcion1 = 0x01;										//orden H, opcion1 0x01 retroceder para hacer homing
-					Envio_I2C(dirEsclavo1 , orden, opcion1, opcion2);	//pedir homing esclavo 1 	
-					//el esclavo1 pone portc1 en 1 hasta que termina de hacer homing
-					while(input(PIN_C1) == 0){								//esperar que portc1 este en 1, indicando que empezo a hacer el homing
-					}
-					while(input(PIN_C1) == 1){								//esperar que portc1 este en 0, indicando que termino el homing
-					}
-					orden = 'X';
-					Envio_I2C(dirEsclavo2, orden, opcion1, opcion2);	//Orden de detener el avance al esclavo 2
-
-					orden = 'H';
-					printf("Homing esclavo 2...\r");
-					opcion1 = 0x00;										//orden H, opcion1 0x00 avanzar para permitir al otro esclavo hacer homing
-					Envio_I2C(dirEsclavo1 , orden, opcion1, opcion2);	//pedir avanzar a esclavo 1
-					opcion1 = 0x01;										//orden H, opcion1 0x01 retroceder para hacer homing
-					Envio_I2C(dirEsclavo2 , orden, opcion1, opcion2);	//pedir homing esclavo 1 	
-					//el esclavo2 pone portc2 en 1 hasta que termina de hacer homing
-					while(input(PIN_C2) == 0){								//esperar que portc2 este en 1, indicando que arranco el homing
-					}     
-					while(input(PIN_C2) == 1){								//esperar que portc2 este en 0, indicando que termino el homing
-					}     
-					orden = 'X';
-					Envio_I2C(dirEsclavo1, orden, opcion1, opcion2);	//Orden de detener el avance al esclavo 1
-					estado = 0x05;
+					printf("Homing terminado. Esperando ordenes...\r");
+					finalRecibido = 0;
+				}
+				if (estadoAnterior == 0x2D)
+				{
+					estadoAnterior = estado;
+					output_A(estado);
+					printf("Segmento terminado. Esperando ordenes...\r");
+					finalRecibido = 0;
 				}
 				break;
-			case 0x05:					//Esperando ordenes de dibujo (Punto de Inicio y Punto de Final)
+			case 0x0D:					//Enviar coordenadas de inicio a los esclavos
+				estadoAnterior = estado;
+				output_A(estado);
+				printf("Desplazando al inicio...\r");
+				objIniEscIzq = objetivoEsclavoIzq(xi,yi);
+				objIniEscDer = objetivoEsclavoDer(xi,yi);
+				//los esclavos se desplazan al punto inicial
+				orden = 'M';
+				opcion1 = objIniEscIzq >> 8;
+				opcion2 = objIniEscIzq ;
+				printf("ObjI: %lu = %x %x\r", objIniEscIzq, opcion1, opcion2);
+				Envio_I2C(dirEsclavo1 , orden, opcion1, opcion2);
+				opcion1 = objIniEscDer >> 8;
+				opcion2 = objIniEscDer;
+				printf("ObjD: %lu = %x %x\r", objIniEscDer, opcion1, opcion2);
+				Envio_I2C(dirEsclavo2 , orden, opcion1, opcion2);
+				while((input(PIN_C1) == 0) | (input(PIN_C2)== 0)){	//espera a que los dos lleguen					
+				}
+				while((input(PIN_C1) == 1) | (input(PIN_C2)== 1)){	//espera a que los dos lleguen					
+				}
+				if (finalRecibido == 1)
+					estado = 0x2D;
+				else
+					estado = 0x15;
+				break;
+			case 0x15:					//Enviar valor de interrupcion de timer a los esclavos
 				if (estadoAnterior != estado)
 				{
 					estadoAnterior = estado;
-					printf("Esperando Ordenes...\r");
+					output_A(estado);
+					printf("Posicion inicial alcanzada. Esperando coordenada final...\r");
 				}
+				if (finalRecibido == 1)
+				{
+					estado = 0x2D;
+				}
+				break;
+			case 0x2D:					//Enviar coordenadas de final a los esclavos
+				estadoAnterior = estado;
 				output_A(estado);
-				break;
-			case 0x0D:					//Enviar coordenadas de inicio a los esclavos
-				break;
-			case 0x15:					//Enviar valor de interrupcion de timer a los esclavos
-				break;
-			case 0x3D:					//Enviar coordenadas de final a los esclavos
+				printf("Preparando para dibujar...\r");
+				objFinEscIzq = objetivoEsclavoIzq(xf,yf);
+				objFinEscDer = objetivoEsclavoDer(xf,yf);
+				while((input(PIN_C1) == 1) | (input(PIN_C2)== 1)){	//si es que aun est醤 desplazandose los motores, espera a que terminen
+				}
+				timersSetting();				//calcular los timers de ambos
+				//los esclavos se desplazan al punto final
+				orden = 'D';
+				opcion1 = objFinEscIzq >> 8;
+				opcion2 = objFinEscIzq ;
+				printf("ObjI: %lu = %x %x\r", objFinEscIzq, opcion1, opcion2);
+				Envio_I2C(dirEsclavo1 , orden, opcion1, opcion2);
+				opcion1 = objFinEscDer >> 8;
+				opcion2 = objFinEscDer;
+				printf("ObjD: %lu = %x %x\r", objFinEscDer, opcion1, opcion2);
+				Envio_I2C(dirEsclavo2 , orden, opcion1, opcion2);
+				output_high(PIN_C0);
+				while((input(PIN_C1) == 0) | (input(PIN_C2)== 1)){	//espera a que los dos lleguen					
+				}
+				while((input(PIN_C1) == 1) | (input(PIN_C2)== 1)){	//espera a que los dos lleguen					
+				}
+				output_low(PIN_C0);
+				estadoAnterior = 0x2D;
+				estado = 0x05;
 				break;
 			}
 	}

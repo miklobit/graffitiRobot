@@ -1,13 +1,13 @@
-004     @WRITE_PROGRAM_MEMORY8.P1
-004-005 @READ_PROGRAM_MEMORY8.P2
+004-005 @READ_PROGRAM_MEMORY8.P1
+004     @WRITE_PROGRAM_MEMORY8.P2
 005     PORTA
 006     PORTB
 007     PORTC
 015     CCP_1
 015     CCP_1_LOW
 016     CCP_1_HIGH
-01B     CCP_2_LOW
 01B     CCP_2
+01B     CCP_2_LOW
 01C     CCP_2_HIGH
 020     @INTERRUPT_AREA
 021     @INTERRUPT_AREA
@@ -32,7 +32,15 @@
 037     MAIN.@SCRATCH1
 038     SSP_isr.incoming
 038     TIMER1_isr.@SCRATCH1
+039     setTimer.numero1
+039     setObjetivo.numero1
 039     @I2C_WRITE_1.P1
+03A     setTimer.numero2
+03A     setObjetivo.numero2
+03B-03C setTimer.mayor
+03B-03C setObjetivo.mayor
+03D-03E setTimer.menor
+03D-03E setObjetivo.menor
 077     @SCRATCH
 078     @SCRATCH
 078     _RETURN_
@@ -79,13 +87,15 @@ F7F     @INTERRUPT_AREA
 FFF     @INTERRUPT_AREA
 
 ROM Allocation:
-0095  @I2C_WRITE_1
+00AB  @I2C_WRITE_1
 003A  STEP
-00B9  interpreta
+0080  setObjetivo
+014E  setTimer
+00CF  interpreta
 0046  TIMER1_isr
-0080  SSP_isr
-0109  MAIN
-0109  @cinit
+0096  SSP_isr
+017A  MAIN
+017A  @cinit
 
 
 User Memory space: 

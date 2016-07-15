@@ -1,49 +1,51 @@
 
-ROM used: 561 (7%)
-          561 (7%) including unused fragments
+ROM used: 742 (9%)
+          742 (9%) including unused fragments
 
           1 Average locations per line
           4 Average locations per statement
 
 RAM used: 29 (8%) at main() level
-          31 (8%) worst case
+          36 (10%) worst case
 
 Stack used: 3 worst case (out of 8 total available)
 
 Lines Stmts  %   Files
 ----- ----- ---  -----
-  252   139 100  graffitiRobotSlave1.c
+  357   188 100  graffitiRobotSlave1.c
    31     0   0  graffitiRobotSlave1.h
   413     0   0  ..\..\..\..\..\..\..\..\Program Files\PICC\devices\16F886.h
 ----- -----
-  696   139 Total
+  801   188 Total
 
 Page ROM  %  RAM   Vol Diff  Functions:
 ---- --- --- ---   --- ----  ----------
  Inline        1             @I2C_WRITE_1
 0     12   2   0             @const87
- Inline        0   672  5.2  interpreta
-0     58  10   1   300  5.5  TIMER1_isr
-0    137  24   1   318  3.2  SSP_isr
-0    296  53   1  2620  8.9  MAIN
+0     22   3   4   171  4.2  setObjetivo
+ Inline        4   171  4.2  setTimer
+ Inline        0  1515  5.9  interpreta
+0     58   8   1   300  5.5  TIMER1_isr
+0    228  31   1   318  3.2  SSP_isr
+0    364  49   1  3302  8.9  MAIN
 
 Program metrics:
-    Functions               4
-    Statements              139
-    Comments                170
-    Volume (V)              4857
-    Difficilty (D)          23.0
-    Effort to implement (E) 111851
-    Time to implement (T)   1 hours, 44 minutes
+    Functions               6
+    Statements              188
+    Comments                198
+    Volume (V)              7448
+    Difficilty (D)          31.8
+    Effort to implement (E) 236717
+    Time to implement (T)   3 hours, 39 minutes
     Est Delivered Bugs (B)  1
-    Cyclomatic Complexity   35
-    Maintainability (MI)    43
+    Cyclomatic Complexity   45
+    Maintainability (MI)    102
 
  Segment     Used  Free
 -----------  ----  ----
 00000-00003     4  0  
 00004-00039    54  0  
-0003A-007FF   503  1487  
+0003A-007FF   684  1306  
 00800-00FFF     0  2048  
 01000-017FF     0  2048  
 01800-01FFF     0  2048  

@@ -1,3 +1,2 @@
->>> Warning 202 "graffitiRobotSlave1.c" Line 19(24,34): Variable never used:   pasoRapido
-      Memory usage:   ROM=7%      RAM=8% - 8%
-      0 Errors,  1 Warnings.
+      Memory usage:   ROM=9%      RAM=8% - 10%
+      0 Errors,  0 Warnings.

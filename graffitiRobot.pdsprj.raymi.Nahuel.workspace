@@ -21,6 +21,7 @@
      <ITEM name="Address Column Width">83</ITEM>
      <ITEM name="AutoResize">No</ITEM>
      <ITEM name="Gridlines">Yes</ITEM>
+     <ITEM name="Item 0">"aux","0x0065",00000001,00000004,101,0,5,FFFFFFFF,0,00000000,00000000</ITEM>
      <ITEM name="Name Column Width">83</ITEM>
      <ITEM name="ShowAddresses">Yes</ITEM>
      <ITEM name="ShowPreviousValues">No</ITEM>
@@ -33,7 +34,7 @@
      <ITEM name="nItems">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="552" x="479" flags="00000023" y="9" h="250" pid="0" iid="22">
+   <POPUP w="552" x="169" flags="00000023" y="111" h="250" pid="0" iid="22">
     <PROPERTIES>
      <ITEM name="ComboBox1000">S</ITEM>
      <ITEM name="ComboBox1001">Sr</ITEM>
@@ -55,7 +56,7 @@
    <POPUP w="695" x="0" flags="00000000" y="552" h="453" pid="0" iid="21">
     <PROPERTIES/>
    </POPUP>
-   <POPUP w="450" x="443" flags="00000063" y="275" h="250" pid="0" iid="23">
+   <POPUP w="450" x="1416" flags="00008063" y="717" h="250" pid="0" iid="23">
     <PROPERTIES>
      <ITEM name="AutoEcho">1</ITEM>
      <ITEM name="HexMode">0</ITEM>
@@ -143,7 +144,7 @@
    <POPUP w="14" x="357" flags="00000008" y="448" h="8" pid="7" iid="2">
     <PROPERTIES/>
    </POPUP>
-   <POPUP w="20" x="377" flags="00000002" y="468" h="0" pid="8" iid="2">
+   <POPUP w="16" x="377" flags="00000002" y="468" h="0" pid="8" iid="2">
     <PROPERTIES>
      <ITEM name="DataType">2</ITEM>
      <ITEM name="DispChars">Yes</ITEM>
@@ -199,15 +200,17 @@
      <ITEM name="TopLineAddress">00000000</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="600" x="20" flags="0000802b" y="596" h="400" pid="1" iid="1">
+   <POPUP w="600" x="20" flags="0000002b" y="596" h="400" pid="1" iid="1">
     <PROPERTIES>
-     <ITEM name="Breakpoint 0">"",0453,0000,9FDF,2E1D,1
+     <ITEM name="Breakpoint 0">"",0DE6,0000,85A1,2E1D,1
 </ITEM>
-     <ITEM name="Breakpoint 1">"",0473,0000,AC38,2E1D,1
+     <ITEM name="Breakpoint 1">"",0EA2,0000,9C21,2E1D,1
 </ITEM>
-     <ITEM name="Breakpoint 2">"",048A,0000,9FDF,2E1D,1
+     <ITEM name="Breakpoint 2">"",1033,0000,60CD,2E1D,1
 </ITEM>
-     <ITEM name="Breakpoint 3">"",0441,0000,5FDB,2E1D,1
+     <ITEM name="Breakpoint 3">"",1156,0000,CED5,2E1D,1
+</ITEM>
+     <ITEM name="Breakpoint 4">"",1195,0000,9C21,2E1D,1
 </ITEM>
      <ITEM name="CaseSensitive">No</ITEM>
      <ITEM name="DISPADDRS">Yes</ITEM>
@@ -215,15 +218,15 @@
      <ITEM name="DISPOPCODES">No</ITEM>
      <ITEM name="FIXUPBPTS">Yes</ITEM>
      <ITEM name="WordsOnly">No</ITEM>
-     <ITEM name="nBreakpoints">3</ITEM>
+     <ITEM name="nBreakpoints">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="377" x="79" flags="0000000b" y="70" h="462" pid="2" iid="1">
+   <POPUP w="663" x="14" flags="0000000b" y="216" h="541" pid="2" iid="1">
     <PROPERTIES>
      <ITEM name="Address Column Width">94</ITEM>
      <ITEM name="AutoResize">No</ITEM>
      <ITEM name="Gridlines">Yes</ITEM>
-     <ITEM name="Name Column Width">94</ITEM>
+     <ITEM name="Name Column Width">154</ITEM>
      <ITEM name="ShowAddresses">No</ITEM>
      <ITEM name="ShowGlobals">Yes</ITEM>
      <ITEM name="ShowPreviousValues">No</ITEM>
@@ -236,7 +239,7 @@
      <ITEM name="nItems">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="600" x="50" flags="0000002b" y="224" h="400" pid="1" iid="2">
+   <POPUP w="600" x="477" flags="0000002b" y="0" h="400" pid="1" iid="2">
     <PROPERTIES>
      <ITEM name="Breakpoint 0">"",0063,0000,510C,FEA2,1
 </ITEM>
@@ -249,12 +252,12 @@
      <ITEM name="nBreakpoints">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="300" x="353" flags="0000000b" y="181" h="430" pid="2" iid="2">
+   <POPUP w="373" x="861" flags="0000000b" y="54" h="430" pid="2" iid="2">
     <PROPERTIES>
      <ITEM name="Address Column Width">94</ITEM>
      <ITEM name="AutoResize">No</ITEM>
      <ITEM name="Gridlines">Yes</ITEM>
-     <ITEM name="Name Column Width">94</ITEM>
+     <ITEM name="Name Column Width">138</ITEM>
      <ITEM name="ShowAddresses">Yes</ITEM>
      <ITEM name="ShowGlobals">Yes</ITEM>
      <ITEM name="ShowPreviousValues">No</ITEM>
@@ -266,9 +269,21 @@
      <ITEM name="nItems">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="600" x="125" flags="0000002b" y="509" h="400" pid="1" iid="3">
+   <POPUP w="600" x="764" flags="0000002b" y="547" h="400" pid="1" iid="3">
     <PROPERTIES>
-     <ITEM name="Breakpoint 0">"",020B,0000,E5B1,DB4E,-1
+     <ITEM name="Breakpoint 0">"",02E5,0000,E5B1,DB4E,-1
+</ITEM>
+     <ITEM name="Breakpoint 1">"",0132,0000,677E,DB4E,1
+</ITEM>
+     <ITEM name="Breakpoint 2">"",0118,0000,A280,DB4E,1
+</ITEM>
+     <ITEM name="Breakpoint 3">"",022E,0000,8AA4,DB4E,1
+</ITEM>
+     <ITEM name="Breakpoint 4">"",0233,0000,A5AF,DB4E,1
+</ITEM>
+     <ITEM name="Breakpoint 5">"",0240,0000,8B70,DB4E,1
+</ITEM>
+     <ITEM name="Breakpoint 6">"",0252,0000,89AD,DB4E,1
 </ITEM>
      <ITEM name="CaseSensitive">No</ITEM>
      <ITEM name="DISPADDRS">Yes</ITEM>
@@ -276,10 +291,10 @@
      <ITEM name="DISPOPCODES">No</ITEM>
      <ITEM name="FIXUPBPTS">Yes</ITEM>
      <ITEM name="WordsOnly">No</ITEM>
-     <ITEM name="nBreakpoints">0</ITEM>
+     <ITEM name="nBreakpoints">1</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="360" x="565" flags="0000000b" y="295" h="538" pid="2" iid="3">
+   <POPUP w="360" x="356" flags="0000000b" y="360" h="538" pid="2" iid="3">
     <PROPERTIES>
      <ITEM name="Address Column Width">94</ITEM>
      <ITEM name="AutoResize">No</ITEM>

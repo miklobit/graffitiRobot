@@ -1,9 +1,12 @@
 ÀÄgraffitiRobotSlave2
-   ÃÄMAIN  0/314  Ram=1
+   ÃÄMAIN  0/388  Ram=1
    ³  ÃÄ??0??
    ³  ÀÄ@const87  0/12  Ram=0
    ÃÄTIMER1_isr  0/58  Ram=1
    ³  ÀÄ@const87  0/12  Ram=0
-   ÀÄSSP_isr  0/137  Ram=1
+   ÀÄSSP_isr  0/228  Ram=1
       ÃÄ@I2C_WRITE_1  (Inline)  Ram=1
       ÀÄinterpreta  (Inline)  Ram=0
+         ÃÄsetObjetivo  0/22  Ram=4
+         ÃÄsetTimer  (Inline)  Ram=4
+         ÀÄsetObjetivo  0/22  Ram=4

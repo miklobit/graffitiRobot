@@ -1,60 +1,100 @@
 
-ROM used: 1200 (15%)
-          1200 (15%) including unused fragments
+ROM used: 5129 (63%)
+          5255 (64%) including unused fragments
 
           2 Average locations per line
-          9 Average locations per statement
+          10 Average locations per statement
 
-RAM used: 42 (11%) at main() level
-          54 (15%) worst case
+RAM used: 66 (18%) at main() level
+          129 (35%) worst case
 
-Stack used: 4 worst case (out of 8 total available)
+Stack used: 5 worst case (out of 8 total available)
 
 Lines Stmts  %   Files
 ----- ----- ---  -----
-  243   136 100  graffitiRobotMaster.c
+  445   255  50  graffitiRobotMaster.c
    30     0   0  graffitiRobotMaster.h
   413     0   0  ..\..\..\..\..\..\..\Program Files\PICC\devices\16F886.h
+ 2172   260  50  ..\..\..\..\..\..\..\Program Files\PICC\drivers\math.h
 ----- -----
-  686   136 Total
+ 3060   515 Total
 
 Page ROM  %  RAM   Vol Diff  Functions:
 ---- --- --- ---   --- ----  ----------
-0     20   2   1             @delay_ms1
+0     20   0   1             @delay_ms1
  Inline        3             @I2C_READ_1
-0     74   6   1             @I2C_WRITE_1
-0     93   8   4   179  2.0  Envio_I2C
+0     74   1   1             @I2C_WRITE_1
+1     65   1  10             @FLT
+1     31   1   4             @SFTOI
+0     29   1   2   171  4.2  @ITOF
+1    204   4  14   171  4.2  @DIVFF
+1    326   6  16  1515  5.9  @ADDFF
+0    134   3  13   300  5.5  @MULFF
+1    159   3  18   494 10.7  sqrt
+0    103   2   4   179  2.0  Envio_I2C
  Inline        4   214  3.3  Lectura_I2C
- Inline        0   774  4.7  interpreta
-0     35   3   2             @PRINTF_X_9600_62_63
-0    455  38   3   383  6.5  RDA_isr
-0    351  29   1  2911  7.9  MAIN
-0     10   1   0             @const117
-0     72   6   3             @PSTRINGC7_9600_62_63
-0      8   1   0             @const119
-0     11   1   0             @const120
-0     11   1   0             @const121
-0     11   1   0             @const122
+1    787  15  14  1782  6.6  timersSetting
+0     13   0   0             @const254
+0     99   2   4             @PSTRINGCN7_9600_62_63
+0     39   1   2             @PRINTF_X_9600_62_63
+0     12   0   0             @const260
+0     12   0   0             @const261
+0     13   0   0             @const262
+0     13   0   0             @const263
+0     13   0   0    59  2.7  @const264
+1     37   1   6    59  2.7  distToPasos
+1    107   2  16   108  4.3  objetivoEsclavoIzq
+1    142   3  20   147  5.1  objetivoEsclavoDer
+0     65   1   7   219  5.7  get16
+ Inline        5   388  3.5  @MUL1616
+0     65   1   4   388  3.5  doHoming
+0     32   1   6             @WRITEBITA
+0     23   0   5  1725  6.8  @READBITA
+ Inline        1  1725  6.8  interpreta
+0     18   0   0             @const300
+0    122   2   9             @PRINTF_LD_9600_62_63
+0     25   0   0             @const303
+0     92   2   3             @PSTRINGC7_9600_62_63
+0     19   0   0             @const305
+0     17   0   0             @const306
+0     25   0   0             @const307
+0     19   0   0   383  6.5  @const308
+0    700  14   3   383  6.5  RDA_isr
+2   1159  23   8  5196  8.9  MAIN
+0     10   0   0             @const314
+0      8   0   0             @const315
+0     11   0   0             @const316
+0     11   0   0             @const317
+0     20   0   0             @const318
+0     21   0   0             @const319
+0     13   0   0             @const320
+0     10   0   0             @const321
+1     89   2   9             @PRINTF_LU_9600_62_63
+0     10   0   0             @const324
+0     30   1   0             @const325
+0     14   0   0             @const326
+0     10   0   0             @const327
+0     10   0   0             @const328
 
 Program metrics:
-    Functions               5
-    Statements              136
-    Comments                166
-    Volume (V)              5673
-    Difficilty (D)          23.9
-    Effort to implement (E) 135597
-    Time to implement (T)   2 hours, 6 minutes
-    Est Delivered Bugs (B)  1
-    Cyclomatic Complexity   30
-    Maintainability (MI)    103
+    Functions               20
+    Statements              515
+    Comments                459
+    Volume (V)              24039
+    Difficilty (D)          101.5
+    Effort to implement (E) 2439553
+    Time to implement (T)   37 hours, 39 minutes
+    Est Delivered Bugs (B)  6
+    Cyclomatic Complexity   97
+    Maintainability (MI)    126
 
  Segment     Used  Free
 -----------  ----  ----
 00000-00003     4  0  
 00004-00030    45  0  
-00031-007FF  1151  848  
-00800-00FFF     0  2048  
-01000-017FF     0  2048  
+00031-007FF  1974  25  
+00800-00FFF  1947  101  
+01000-017FF  1159  889  
 01800-01FFF     0  2048  
 
 
