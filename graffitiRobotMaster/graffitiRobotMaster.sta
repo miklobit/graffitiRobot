@@ -1,5 +1,5 @@
 
-ROM used: 5129 (63%)
+ROM used: 5130 (63%)
           5255 (64%) including unused fragments
 
           2 Average locations per line
@@ -26,10 +26,10 @@ Page ROM  %  RAM   Vol Diff  Functions:
 0     74   1   1             @I2C_WRITE_1
 1     65   1  10             @FLT
 1     31   1   4             @SFTOI
-0     29   1   2   171  4.2  @ITOF
-1    204   4  14   171  4.2  @DIVFF
-1    326   6  16  1515  5.9  @ADDFF
-0    134   3  13   300  5.5  @MULFF
+0     29   1   2             @ITOF
+1    204   4  14             @DIVFF
+1    326   6  16             @ADDFF
+0    134   3  13             @MULFF
 1    159   3  18   494 10.7  sqrt
 0    103   2   4   179  2.0  Envio_I2C
  Inline        4   214  3.3  Lectura_I2C
@@ -41,15 +41,15 @@ Page ROM  %  RAM   Vol Diff  Functions:
 0     12   0   0             @const261
 0     13   0   0             @const262
 0     13   0   0             @const263
-0     13   0   0    59  2.7  @const264
+0     13   0   0             @const264
 1     37   1   6    59  2.7  distToPasos
 1    107   2  16   108  4.3  objetivoEsclavoIzq
-1    142   3  20   147  5.1  objetivoEsclavoDer
+1    143   3  20   147  5.1  objetivoEsclavoDer
 0     65   1   7   219  5.7  get16
- Inline        5   388  3.5  @MUL1616
+ Inline        5             @MUL1616
 0     65   1   4   388  3.5  doHoming
 0     32   1   6             @WRITEBITA
-0     23   0   5  1725  6.8  @READBITA
+0     23   0   5             @READBITA
  Inline        1  1725  6.8  interpreta
 0     18   0   0             @const300
 0    122   2   9             @PRINTF_LD_9600_62_63
@@ -58,7 +58,7 @@ Page ROM  %  RAM   Vol Diff  Functions:
 0     19   0   0             @const305
 0     17   0   0             @const306
 0     25   0   0             @const307
-0     19   0   0   383  6.5  @const308
+0     19   0   0             @const308
 0    700  14   3   383  6.5  RDA_isr
 2   1159  23   8  5196  8.9  MAIN
 0     10   0   0             @const314
@@ -77,23 +77,23 @@ Page ROM  %  RAM   Vol Diff  Functions:
 0     10   0   0             @const328
 
 Program metrics:
-    Functions               20
+    Functions               12
     Statements              515
     Comments                459
-    Volume (V)              24039
-    Difficilty (D)          101.5
-    Effort to implement (E) 2439553
-    Time to implement (T)   37 hours, 39 minutes
-    Est Delivered Bugs (B)  6
-    Cyclomatic Complexity   97
-    Maintainability (MI)    126
+    Volume (V)              15273
+    Difficilty (D)          61.5
+    Effort to implement (E) 939783
+    Time to implement (T)   14 hours, 30 minutes
+    Est Delivered Bugs (B)  3
+    Cyclomatic Complexity   46
+    Maintainability (MI)    64
 
  Segment     Used  Free
 -----------  ----  ----
 00000-00003     4  0  
 00004-00030    45  0  
 00031-007FF  1974  25  
-00800-00FFF  1947  101  
+00800-00FFF  1948  100  
 01000-017FF  1159  889  
 01800-01FFF     0  2048  
 

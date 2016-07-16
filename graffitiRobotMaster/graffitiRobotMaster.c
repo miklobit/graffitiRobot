@@ -24,7 +24,7 @@ int16 xi, yi, xf, yf;	//variables de almacenamiento de las coordenadas cartesian
 short finalRecibido;
 int16 objIniEscIzq, objIniEscDer;
 int16 objFinEscIzq, objFinEscDer;
-const int16 anchoDibujo = 2500;		//MAX 2573.6-->> cantidad de pasos max 65535 y resolución de 0.9 grados
+const float32 anchoDibujo = 1767.766953;		//MAX 2573.6-->> cantidad de pasos max 65535 y resolución de 0.9 grados
 /*-variables constructivas-*/
 const float32 pasoDist = 25.4648; //1paso/0.9grados*360grados/(pi*5)mm
 /** Variables para el calculo de tiempo de interrupcion de timers**/

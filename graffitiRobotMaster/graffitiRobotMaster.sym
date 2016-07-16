@@ -222,7 +222,7 @@ ROM Allocation:
 0A53  sqrt
 0665  Envio_I2C
 041D  Lectura_I2C
-0C88  timersSetting
+0C89  timersSetting
 0031  @const254
 01BE  @PSTRINGCN7_9600_62_63
 00F8  @PRINTF_X_9600_62_63
@@ -258,7 +258,7 @@ ROM Allocation:
 05EF  @const319
 0604  @const320
 0611  @const321
-0C2F  @PRINTF_LU_9600_62_63
+0C30  @PRINTF_LU_9600_62_63
 061B  @const324
 0625  @const325
 0643  @const326

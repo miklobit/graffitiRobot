@@ -320,7 +320,7 @@ void main()
                 enable_interrupts(INT_TIMER1);
                 
                 //Loop hasta llegar a la posición objetivo
-                while(estado == 0x1D)    //el bucle no es while(posicionActual!=posicionObjetivo) para permitir cortar el avance con la orden 'X'                {
+                while(estado == 0x1D)    //el bucle no es while(posicionActual!=posicionObjetivo) para permitir cortar el avance con la orden 'X'
                 {
 	                if (posicionActual == posicionObjetivo)
                         break;
