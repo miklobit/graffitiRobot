@@ -83,7 +83,7 @@ void interpreta()
 						  else if (estado == 0x05)
 						  {
 								estadoAnterior = estado;
-								estado = 0x0D;
+								estado = 0x0F;
 						  }
 						  break;
 					 case 0x01:
@@ -94,7 +94,7 @@ void interpreta()
 				break;
 		  case 'x':
 		  case 'X':
-				if (estado == 0x0D)
+				if (estado == 0x0F)
 				{
 					posicionObjetivo = posicionActual;
 					 estadoAnterior = estado;
@@ -112,7 +112,7 @@ void interpreta()
 				{
 					 setObjetivo(numero1, numero2);    
 					 estadoAnterior = estado;
-					 estado = 0x1D;
+					 estado = 0x0D;
 				}
 				break;
 		  case 't':
@@ -279,7 +279,7 @@ void main()
                     posicionActual = 10;                //actualizo la posicion actual siempre superior a la posicion objetivo para que en la interrupcion avance
                 }
                 break;
-            case 0x0D:              //avanza para permitir al otro motor hacer homing, sin perder la referencia
+            case 0x0F:              //avanza para permitir al otro motor hacer homing, sin perder la referencia
                 //Actualiza variables de estado
                 output_A(estado);
 
@@ -291,7 +291,7 @@ void main()
                 enable_interrupts(INT_TIMER1);            //habilito la interrupcion del timer
 
                 //Loop para desplazarce hasta que el master indique detenerse (orden 'X')
-                while(estado == 0x0D){                    //mientras no reciba una mensaje del master de cambiar de estado, dejar de avanzar
+                while(estado == 0x0F){                    //mientras no reciba una mensaje del master de cambiar de estado, dejar de avanzar
                     posicionObjetivo = posicionActual + 50;                //actualizo la posicion actual siempre superior a la posicion objetivo para que en la interrupcion avance
                 }
                 break;
@@ -308,7 +308,7 @@ void main()
                     disable_interrupts(INT_TIMER1);
                 }
                 break;
-            case 0x1D:
+            case 0x0D:
                 //Actualiza variables de estado
                 output_A(estado);
                 output_high(PIN_C2);                                //informo que estoy ocupado
@@ -319,12 +319,12 @@ void main()
                 enable_interrupts(INT_TIMER1);
                 
                 //Loop hasta llegar a la posición objetivo
-                while(estado == 0x1D)    //el bucle no es while(posicionActual!=posicionObjetivo) para permitir cortar el avance con la orden 'X'                {
+                while(estado == 0x0D)    //el bucle no es while(posicionActual!=posicionObjetivo) para permitir cortar el avance con la orden 'X'                {
                 {
 	                if (posicionActual == posicionObjetivo)
                         break;
                 }
-                estadoAnterior = 0x1D;
+                estadoAnterior = 0x0D;
                 estado = 0x05;
                 break;
             case 0x2D:

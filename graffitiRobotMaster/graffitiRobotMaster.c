@@ -431,7 +431,7 @@ void main(void)
 				printf("ObjD: %lu = %x %x\r", objFinEscDer, opcion1, opcion2);
 				Envio_I2C(dirEsclavo2 , orden, opcion1, opcion2);
 				output_high(PIN_C0);
-				while((input(PIN_C1) == 0) | (input(PIN_C2)== 1)){	//espera a que los dos lleguen					
+				while((input(PIN_C1) == 0) | (input(PIN_C2)== 0)){	//espera a que los dos lleguen					
 				}
 				while((input(PIN_C1) == 1) | (input(PIN_C2)== 1)){	//espera a que los dos lleguen					
 				}
