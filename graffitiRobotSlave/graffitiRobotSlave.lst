@@ -1,17 +1,17 @@
-CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
+CCS PCM C Compiler, Version 4.104, 5967               02-Aug-16 02:08
 
-               Filename: C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\1SlaveUpLeft\graffitiRobotSlave1.lst
+               Filename: C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\graffitiRobotSlave.lst
 
-               ROM used: 742 words (9%)
+               ROM used: 816 words (10%)
                          Largest free fragment is 2048
-               RAM used: 29 (8%) at main() level
-                         36 (10%) worst case
+               RAM used: 35 (10%) at main() level
+                         42 (11%) worst case
                Stack:    3 worst case (1 in main + 2 for interrupts)
 
 *
 0000:  MOVLW  01
 0001:  MOVWF  0A
-0002:  GOTO   17A
+0002:  GOTO   18E
 0003:  NOP
 0004:  MOVWF  7F
 0005:  SWAPF  03,W
@@ -67,7 +67,7 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 0037:  BCF    0A.3
 0038:  BCF    0A.4
 0039:  GOTO   096
-.................... #include "C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\1SlaveUpLeft\graffitiRobotSlave1.h" 
+.................... #include "C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\graffitiRobotSlave.h" 
 .................... #include <16F886.h> 
 .................... //////// Standard Header file for the PIC16F886 device //////////////// 
 .................... #device PIC16F886 
@@ -76,7 +76,7 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 .................... #device adc=8 
 ....................  
 .................... #FUSES NOWDT                 	//No Watch Dog Timer 
-.................... #FUSES HS                    	//High speed Osc (> 4mhz for PCM/PCH) (>10mhz for PCD) 
+.................... #FUSES INTRC                    	//High speed Osc (> 4mhz for PCM/PCH) (>10mhz for PCD) 
 .................... #FUSES NOPUT                 	//No Power Up Timer 
 .................... #FUSES MCLR                  	//Master Clear pin enabled 
 .................... #FUSES NOPROTECT             	//Code not protected from reading 
@@ -90,10 +90,31 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 .................... #FUSES BORV40                	//Brownout reset at 4.0V 
 .................... #FUSES RESERVED              	//Used to set the reserved FUSE bits 
 ....................  
-.................... #use delay(clock=20000000) 
-.................... #use i2c(Slave,Fast,sda=PIN_C4,scl=PIN_C3,address=0x10) 
+.................... #use delay(clock=8000000) 
 *
-00AB:  MOVF   39,W
+017A:  MOVLW  3D
+017B:  MOVWF  04
+017C:  BCF    03.7
+017D:  MOVF   00,W
+017E:  BTFSC  03.2
+017F:  GOTO   18D
+0180:  MOVLW  02
+0181:  MOVWF  78
+0182:  CLRF   77
+0183:  DECFSZ 77,F
+0184:  GOTO   183
+0185:  DECFSZ 78,F
+0186:  GOTO   182
+0187:  MOVLW  97
+0188:  MOVWF  77
+0189:  DECFSZ 77,F
+018A:  GOTO   189
+018B:  DECFSZ 00,F
+018C:  GOTO   180
+018D:  RETURN
+.................... #use i2c(Slave,Fast,sda=PIN_C4,scl=PIN_C3,address=0x1F) 
+*
+00AB:  MOVF   3F,W
 00AC:  MOVWF  13
 00AD:  BSF    14.4
 00AE:  BCF    0C.3
@@ -115,6 +136,9 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 .................... #BYTE PORTC = 0x07 
 .................... #BYTE TRISC = 0x87 
 ....................  
+.................... #BYTE SSPADD = 0x93 
+....................  
+....................  
 ....................  
 .................... /*****************************************************************************/ 
 .................... /**********************        Variables Globales        *********************/ 
@@ -130,11 +154,27 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 .................... int8 numero2; 
 ....................  
 .................... /** Variables para cotrol del robot**/ 
+.................... // #define Fclock 20000000 //Frecuencia del oscilador	20MHz 
+.................... // #define Fcy Fclock/4    //Frecuencia Interna 		5MHz 
+.................... // #define T1pre   1       //Prescaler Timer1 
+.................... // #define fTimer1	Fcy/T1pre //Freciencia Timer1 		5MHz 
+.................... // #define tTimer1_NS	1000000000/fTimer1 //Periodo del Timer1 en nseg	200 nseg 
+....................  
+.................... #define OVERHEAD 50	//VERIFICAR? 
+.................... // #define PASORAPIDO_NS 30000 
+.................... // #define PASOHOMING_NS 150000 
+.................... // #define PASOFINHOMING_NS 600000 
+....................  
 .................... /*-Variables de control de la interrupcion del timer-*/ 
 .................... unsigned int16 timerCarga; 
-.................... const int16 pasoRapido = 0xF03C;                             //velocidad máxima de avance del motor (1 paso cada 30 us -> 65386) 
-.................... const int16 homingVel = 0x9C40;                             //velocidad para realización del homing (1 paso cada 150 us -> 64786) 
-.................... const int16 finHomingVel = 0x15A0;                             //velocidad para terminar el homing (1 paso cada 600 us -> 64786) 
+.................... // int16 tt1 = 200;//(int16)(1000000000/((20000000/4)/T1pre)); 
+.................... // int16 tPasoRapido = (int16)(30000/tt1); 
+.................... // int16 tPasoHoming = (int16)(150000/tt1); 
+.................... // int16 tPasoFinHoming = (int16)(600000/tt1); 
+....................  
+.................... int16 pasoRapido = 0xFFFF - OVERHEAD - 0x064E;          //velocidad máxima de avance del motor (1 paso cada 807 us -> 61500) 
+.................... int16 homingVel = 0xFFFF - OVERHEAD - 0x27E6;           //velocidad para realización del homing (1 paso cada 5.107 ms -> 40000) 
+.................... int16 finHomingVel = 0xFFFF - OVERHEAD - 0x5DC0;		//velocidad para terminar el homing (1 paso cada 12ms -> 5535) 
 .................... /*-Variables de control de pasos-*/ 
 .................... const int8 STEP[] = {0x01,0x03,0x02,0x06,0x04,0x0C,0x08,0x09};    //valores para el puerto de salida de los pasos 
 .................... unsigned int stepIndex;                                            //apuntador al paso actual 
@@ -147,31 +187,31 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 .................... void setObjetivo(unsigned int8 numero1, unsigned int8  numero2) 
 .................... { 
 *
-0080:  CLRF   3C
-0081:  MOVF   39,W
-0082:  MOVWF  3B
+0080:  CLRF   42
+0081:  MOVF   3F,W
+0082:  MOVWF  41
 .................... 	int16 mayor = numero1; 
 .................... 	mayor = 0xFF00 & (mayor << 8); 
-0083:  MOVF   3B,W
+0083:  MOVF   41,W
 0084:  MOVWF  7A
 0085:  MOVLW  00
-0086:  CLRF   3B
+0086:  CLRF   41
 0087:  MOVF   7A,W
-0088:  MOVWF  3C
+0088:  MOVWF  42
 .................... 	int16 menor = 0x00FF & numero2; 
-0089:  MOVF   3A,W
-008A:  MOVWF  3D
-008B:  CLRF   3E
+0089:  MOVF   40,W
+008A:  MOVWF  43
+008B:  CLRF   44
 ....................     posicionObjetivo = mayor + menor;  
-008C:  MOVF   3D,W
-008D:  ADDWF  3B,W
-008E:  MOVWF  34
-008F:  MOVF   3C,W
-0090:  MOVWF  35
-0091:  MOVF   3E,W
+008C:  MOVF   43,W
+008D:  ADDWF  41,W
+008E:  MOVWF  3A
+008F:  MOVF   42,W
+0090:  MOVWF  3B
+0091:  MOVF   44,W
 0092:  BTFSC  03.0
-0093:  INCFSZ 3E,W
-0094:  ADDWF  35,F
+0093:  INCFSZ 44,W
+0094:  ADDWF  3B,F
 .................... } 
 0095:  RETURN
 .................... /*****************************************************************************/ 
@@ -180,30 +220,30 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 .................... void setTimer(unsigned int8 numero1, unsigned int8  numero2) 
 .................... { 
 *
-014E:  CLRF   3C
-014F:  MOVF   39,W
-0150:  MOVWF  3B
+014E:  CLRF   42
+014F:  MOVF   3F,W
+0150:  MOVWF  41
 .................... 	int16 mayor = numero1; 
 .................... 	mayor = 0xFF00 & (mayor << 8); 
-0151:  MOVF   3B,W
+0151:  MOVF   41,W
 0152:  MOVWF  7A
 0153:  MOVLW  00
-0154:  CLRF   3B
+0154:  CLRF   41
 0155:  MOVF   7A,W
-0156:  MOVWF  3C
+0156:  MOVWF  42
 .................... 	int16 menor = 0x00FF & numero2; 
-0157:  MOVF   3A,W
-0158:  MOVWF  3D
-0159:  CLRF   3E
+0157:  MOVF   40,W
+0158:  MOVWF  43
+0159:  CLRF   44
 ....................     timerCarga = mayor + menor;  
-015A:  MOVF   3D,W
-015B:  ADDWF  3B,W
+015A:  MOVF   43,W
+015B:  ADDWF  41,W
 015C:  MOVWF  2F
-015D:  MOVF   3C,W
+015D:  MOVF   42,W
 015E:  MOVWF  30
-015F:  MOVF   3E,W
+015F:  MOVF   44,W
 0160:  BTFSC  03.0
-0161:  INCFSZ 3E,W
+0161:  INCFSZ 44,W
 0162:  ADDWF  30,F
 .................... }    
 ....................  
@@ -213,7 +253,6 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 ....................  
 .................... void interpreta() 
 .................... { 
-....................     //unsigned int16 aux16=0; 
 ....................     switch(orden) 
 ....................     { 
 *
@@ -325,8 +364,8 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 ....................                         estadoAnterior = estado; 
 011B:  MOVF   29,W
 011C:  MOVWF  2A
-....................                         estado = 0x0D; 
-011D:  MOVLW  0D
+....................                         estado = 0x0F; 
+011D:  MOVLW  0F
 011E:  MOVWF  29
 ....................                     } 
 ....................                     break; 
@@ -345,17 +384,17 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 0125:  GOTO   176
 ....................         case 'x': 
 ....................         case 'X': 
-....................             if (estado == 0x0D) 
+....................             if (estado == 0x0F) 
 0126:  MOVF   29,W
-0127:  SUBLW  0D
+0127:  SUBLW  0F
 0128:  BTFSS  03.2
 0129:  GOTO   133
 ....................             { 
 ....................             	posicionObjetivo = posicionActual; 
-012A:  MOVF   33,W
-012B:  MOVWF  35
-012C:  MOVF   32,W
-012D:  MOVWF  34
+012A:  MOVF   39,W
+012B:  MOVWF  3B
+012C:  MOVF   38,W
+012D:  MOVWF  3A
 ....................                 estadoAnterior = estado; 
 012E:  MOVF   29,W
 012F:  MOVWF  2A
@@ -385,15 +424,15 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 ....................             { 
 ....................                 setObjetivo(numero1, numero2);     
 013C:  MOVF   2D,W
-013D:  MOVWF  39
+013D:  MOVWF  3F
 013E:  MOVF   2E,W
-013F:  MOVWF  3A
+013F:  MOVWF  40
 0140:  CALL   080
 ....................                 estadoAnterior = estado; 
 0141:  MOVF   29,W
 0142:  MOVWF  2A
-....................                 estado = 0x1D; 
-0143:  MOVLW  1D
+....................                 estado = 0x0D; 
+0143:  MOVLW  0D
 0144:  MOVWF  29
 ....................             } 
 ....................             break; 
@@ -408,9 +447,9 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 ....................             { 
 ....................                 setTimer(numero1, numero2);     
 014A:  MOVF   2D,W
-014B:  MOVWF  39
+014B:  MOVWF  3F
 014C:  MOVF   2E,W
-014D:  MOVWF  3A
+014D:  MOVWF  40
 ....................                 estadoAnterior = estado; 
 *
 0163:  MOVF   29,W
@@ -431,9 +470,9 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 ....................             { 
 ....................                 setObjetivo(numero1, numero2);        
 016C:  MOVF   2D,W
-016D:  MOVWF  39
+016D:  MOVWF  3F
 016E:  MOVF   2E,W
-016F:  MOVWF  3A
+016F:  MOVWF  40
 0170:  CALL   080
 ....................                 estadoAnterior = estado; 
 0171:  MOVF   29,W
@@ -444,7 +483,6 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 ....................             } 
 ....................             break; 
 0175:  GOTO   176
-....................              
 ....................     } 
 .................... } 
 ....................  
@@ -458,71 +496,71 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 0048:  MOVF   2F,W
 0049:  MOVWF  0E
 ....................     if (posicionObjetivo < posicionActual)            //si la posicion actual es mayor a la objetivo, decremento el indice y la posicion actual 
-004A:  MOVF   35,W
-004B:  SUBWF  33,W
+004A:  MOVF   3B,W
+004B:  SUBWF  39,W
 004C:  BTFSS  03.0
 004D:  GOTO   060
 004E:  BTFSS  03.2
 004F:  GOTO   054
-0050:  MOVF   32,W
-0051:  SUBWF  34,W
+0050:  MOVF   38,W
+0051:  SUBWF  3A,W
 0052:  BTFSC  03.0
 0053:  GOTO   060
 ....................     { 
 ....................         posicionActual--; 
-0054:  MOVF   32,W
+0054:  MOVF   38,W
 0055:  BTFSC  03.2
-0056:  DECF   33,F
-0057:  DECF   32,F
+0056:  DECF   39,F
+0057:  DECF   38,F
 ....................         if(stepIndex == 0)                            //verifico no exceder el limite inferior de valores posibles del indice 
-0058:  MOVF   31,F
+0058:  MOVF   37,F
 0059:  BTFSS  03.2
 005A:  GOTO   05E
 ....................             stepIndex = 7; 
 005B:  MOVLW  07
-005C:  MOVWF  31
+005C:  MOVWF  37
 ....................         else 
 005D:  GOTO   05F
 ....................             stepIndex--;                             
-005E:  DECF   31,F
+005E:  DECF   37,F
 ....................     } 
 ....................     else if (posicionObjetivo > posicionActual)        //si la posicion actual es inferior a la objetivo, incremento el indice y la posicion actual 
 005F:  GOTO   074
-0060:  MOVF   33,W
-0061:  SUBWF  35,W
+0060:  MOVF   39,W
+0061:  SUBWF  3B,W
 0062:  BTFSS  03.0
 0063:  GOTO   074
 0064:  BTFSS  03.2
 0065:  GOTO   06A
-0066:  MOVF   34,W
-0067:  SUBWF  32,W
+0066:  MOVF   3A,W
+0067:  SUBWF  38,W
 0068:  BTFSC  03.0
 0069:  GOTO   074
 ....................     { 
 ....................         posicionActual++; 
-006A:  INCF   32,F
+006A:  INCF   38,F
 006B:  BTFSC  03.2
-006C:  INCF   33,F
+006C:  INCF   39,F
 ....................         if(stepIndex == 7)                            //verifico no exceder el limite superor de los valores posibles del indice 
-006D:  MOVF   31,W
+006D:  MOVF   37,W
 006E:  SUBLW  07
 006F:  BTFSS  03.2
 0070:  GOTO   073
 ....................             stepIndex = 0; 
-0071:  CLRF   31
+0071:  CLRF   37
 ....................         else 
 0072:  GOTO   074
 ....................             stepIndex++; 
-0073:  INCF   31,F
+0073:  INCF   37,F
 ....................     } 
 ....................     output_B(STEP[stepIndex]);                        //actualizo el puerto que actua sobre el motor 
-0074:  MOVF   31,W
+0074:  MOVF   37,W
 0075:  CALL   03A
-0076:  MOVWF  38
+0076:  MOVWF  3E
 0077:  BSF    03.5
 0078:  CLRF   06
 0079:  BCF    03.5
-007A:  MOVF   38,W
+007A:  MOVF   3E,W
 007B:  MOVWF  06
 .................... } 
 ....................  
@@ -544,16 +582,16 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 0097:  BTFSC  14.5
 0098:  GOTO   0A1
 0099:  BCF    03.5
-009A:  CLRF   36
+009A:  CLRF   3C
 009B:  BSF    03.5
 009C:  BTFSS  14.2
 009D:  GOTO   0A1
 009E:  BCF    03.5
-009F:  BSF    36.7
+009F:  BSF    3C.7
 00A0:  BSF    03.5
 00A1:  BCF    03.5
-00A2:  MOVF   36,W
-00A3:  INCF   36,F
+00A2:  MOVF   3C,W
+00A3:  INCF   3C,F
 00A4:  MOVWF  2B
 ....................     /* Solicitud de lectura del esclavo por el master */ 
 ....................     if(fstate == 0x80) {          
@@ -563,7 +601,7 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 00A8:  GOTO   0B7
 ....................         i2c_write(estado);                    //Manda al maestro el estado del esclavo 
 00A9:  MOVF   29,W
-00AA:  MOVWF  39
+00AA:  MOVWF  3F
 ....................     } 
 ....................     /* Sino está solicitando lectura es que está enviando algo */ 
 ....................     else {                                    //Sino es que hay dato en el bus I2C... 
@@ -575,12 +613,12 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 00B9:  GOTO   0B8
 00BA:  MOVF   13,W
 00BB:  BSF    14.4
-00BC:  MOVWF  38
+00BC:  MOVWF  3E
 ....................         if (fstate == 1) {                    //Información recibida corresponde a la orden 
 00BD:  DECFSZ 2B,W
 00BE:  GOTO   0C2
 ....................             orden = incoming;                //Se guarda posición 
-00BF:  MOVF   38,W
+00BF:  MOVF   3E,W
 00C0:  MOVWF  2C
 ....................         } 
 ....................         else if (fstate == 2) {                //Información recibida corresponde a la primera opcion de la orden 
@@ -590,7 +628,7 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 00C4:  BTFSS  03.2
 00C5:  GOTO   0C9
 ....................             numero1 = incoming;                //Se guarda dato 
-00C6:  MOVF   38,W
+00C6:  MOVF   3E,W
 00C7:  MOVWF  2D
 ....................         } 
 ....................         else if (fstate == 3) {                //Información recibida corresponde a la segunda opcion de la orden 
@@ -600,7 +638,7 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 00CB:  BTFSS  03.2
 00CC:  GOTO   176
 ....................             numero2 = incoming;                //Se guarda dato 
-00CD:  MOVF   38,W
+00CD:  MOVF   3E,W
 00CE:  MOVWF  2E
 ....................             interpreta(); 
 ....................         } 
@@ -616,526 +654,594 @@ CCS PCM C Compiler, Version 4.104, 5967               14-Jul-16 01:07
 0179:  GOTO   023
 .................... void main() 
 .................... { 
-017A:  CLRF   04
-017B:  BCF    03.7
-017C:  MOVLW  1F
-017D:  ANDWF  03,F
-017E:  BSF    28.3
-017F:  MOVF   28,W
-0180:  BSF    03.5
-0181:  MOVWF  07
-0182:  BCF    03.5
-0183:  BSF    28.4
-0184:  MOVF   28,W
-0185:  BSF    03.5
-0186:  MOVWF  07
-0187:  MOVLW  10
-0188:  MOVWF  13
-0189:  MOVLW  36
-018A:  BCF    03.5
-018B:  MOVWF  14
-018C:  BSF    03.5
-018D:  BSF    03.6
-018E:  MOVF   09,W
-018F:  ANDLW  C0
-0190:  MOVWF  09
-0191:  BCF    03.6
-0192:  BCF    1F.4
-0193:  BCF    1F.5
-0194:  MOVLW  00
-0195:  BSF    03.6
-0196:  MOVWF  08
-0197:  BCF    03.5
-0198:  CLRF   07
-0199:  CLRF   08
-019A:  CLRF   09
+*
+018E:  CLRF   04
+018F:  BCF    03.7
+0190:  MOVLW  1F
+0191:  ANDWF  03,F
+0192:  MOVLW  71
+0193:  BSF    03.5
+0194:  MOVWF  0F
+0195:  MOVF   0F,W
+0196:  BCF    03.5
+0197:  BSF    28.3
+0198:  MOVF   28,W
+0199:  BSF    03.5
+019A:  MOVWF  07
+019B:  BCF    03.5
+019C:  BSF    28.4
+019D:  MOVF   28,W
+019E:  BSF    03.5
+019F:  MOVWF  07
+01A0:  MOVLW  1F
+01A1:  MOVWF  13
+01A2:  MOVLW  36
+01A3:  BCF    03.5
+01A4:  MOVWF  14
+01A5:  MOVLW  F9
+01A6:  MOVWF  32
+01A7:  MOVLW  7F
+01A8:  MOVWF  31
+01A9:  MOVLW  D7
+01AA:  MOVWF  34
+01AB:  MOVLW  E7
+01AC:  MOVWF  33
+01AD:  MOVLW  A2
+01AE:  MOVWF  36
+01AF:  MOVLW  0D
+01B0:  MOVWF  35
+01B1:  BSF    03.5
+01B2:  BSF    03.6
+01B3:  MOVF   09,W
+01B4:  ANDLW  C0
+01B5:  MOVWF  09
+01B6:  BCF    03.6
+01B7:  BCF    1F.4
+01B8:  BCF    1F.5
+01B9:  MOVLW  00
+01BA:  BSF    03.6
+01BB:  MOVWF  08
+01BC:  BCF    03.5
+01BD:  CLRF   07
+01BE:  CLRF   08
+01BF:  CLRF   09
 ....................     set_tris_A(0x00); 
 *
-01A0:  MOVLW  00
-01A1:  BSF    03.5
-01A2:  MOVWF  05
+01C5:  MOVLW  00
+01C6:  BSF    03.5
+01C7:  MOVWF  05
 ....................     set_tris_B(0x00); 
-01A3:  MOVWF  06
+01C8:  MOVWF  06
 ....................     bit_set(TRISC,0);    //RC0 entrada 
-01A4:  BSF    07.0
+01C9:  BSF    07.0
 ....................     bit_set(TRISC,1);    //RC1 entrada 
-01A5:  BSF    07.1
+01CA:  BSF    07.1
 ....................     bit_clear(TRISC,2);    //RC2 salida 
-01A6:  BCF    07.2
+01CB:  BCF    07.2
+....................     bit_set(TRISC,5);    //RC5 entrada 
+01CC:  BSF    07.5
 ....................  
 ....................     bit_clear(PORTC,2);    //RC2=0 
-01A7:  BCF    03.5
-01A8:  BCF    07.2
+01CD:  BCF    03.5
+01CE:  BCF    07.2
 ....................  
 ....................     estado = 0x00;                //Representa el estado del master 
-01A9:  CLRF   29
+01CF:  CLRF   29
 ....................     estadoAnterior = 0x01;        //Definido con un valor diferente a estado solo a fines de que pase por el primer bucle de desenergizado 
-01AA:  MOVLW  01
-01AB:  MOVWF  2A
+01D0:  MOVLW  01
+01D1:  MOVWF  2A
 ....................      
 ....................     stepIndex = 0; 
-01AC:  CLRF   31
+01D2:  CLRF   37
 ....................  
 ....................     setup_adc_ports(NO_ANALOGS|VSS_VDD);     
-01AD:  BSF    03.5
-01AE:  BSF    03.6
-01AF:  MOVF   09,W
-01B0:  ANDLW  C0
-01B1:  MOVWF  09
-01B2:  BCF    03.6
-01B3:  BCF    1F.4
-01B4:  BCF    1F.5
-01B5:  MOVLW  00
-01B6:  BSF    03.6
-01B7:  MOVWF  08
-....................     setup_adc(ADC_CLOCK_DIV_2); 
-01B8:  BCF    03.5
-01B9:  BCF    03.6
-01BA:  BCF    1F.6
-01BB:  BCF    1F.7
-01BC:  BSF    03.5
-01BD:  BCF    1F.7
-01BE:  BCF    03.5
-01BF:  BSF    1F.0
-....................     setup_timer_0(RTCC_INTERNAL|RTCC_DIV_1); 
-01C0:  BSF    03.5
-01C1:  MOVF   01,W
-01C2:  ANDLW  C7
-01C3:  IORLW  08
-01C4:  MOVWF  01
-....................     setup_timer_1(T1_INTERNAL|T1_DIV_BY_1); 
-01C5:  MOVLW  05
-01C6:  BCF    03.5
-01C7:  MOVWF  10
-....................     setup_timer_2(T2_DISABLED,0,1); 
-01C8:  MOVLW  00
-01C9:  MOVWF  78
-01CA:  MOVWF  12
-01CB:  MOVLW  00
-01CC:  BSF    03.5
-01CD:  MOVWF  12
-....................     setup_comparator(NC_NC_NC_NC);// This device COMP currently not supported by the PICWizard 
-01CE:  BCF    03.5
-01CF:  BSF    03.6
-01D0:  CLRF   07
-01D1:  CLRF   08
-01D2:  CLRF   09
-....................     enable_interrupts(INT_TIMER1); 
 01D3:  BSF    03.5
-01D4:  BCF    03.6
-01D5:  BSF    0C.0
+01D4:  BSF    03.6
+01D5:  MOVF   09,W
+01D6:  ANDLW  C0
+01D7:  MOVWF  09
+01D8:  BCF    03.6
+01D9:  BCF    1F.4
+01DA:  BCF    1F.5
+01DB:  MOVLW  00
+01DC:  BSF    03.6
+01DD:  MOVWF  08
+....................     setup_adc(ADC_CLOCK_DIV_2); 
+01DE:  BCF    03.5
+01DF:  BCF    03.6
+01E0:  BCF    1F.6
+01E1:  BCF    1F.7
+01E2:  BSF    03.5
+01E3:  BCF    1F.7
+01E4:  BCF    03.5
+01E5:  BSF    1F.0
+....................     setup_timer_0(RTCC_INTERNAL|RTCC_DIV_1); 
+01E6:  BSF    03.5
+01E7:  MOVF   01,W
+01E8:  ANDLW  C7
+01E9:  IORLW  08
+01EA:  MOVWF  01
+....................     setup_timer_1(T1_INTERNAL|T1_DIV_BY_1); 
+01EB:  MOVLW  05
+01EC:  BCF    03.5
+01ED:  MOVWF  10
+....................     setup_timer_2(T2_DISABLED,0,1); 
+01EE:  MOVLW  00
+01EF:  MOVWF  78
+01F0:  MOVWF  12
+01F1:  MOVLW  00
+01F2:  BSF    03.5
+01F3:  MOVWF  12
+....................     setup_comparator(NC_NC_NC_NC);// This device COMP currently not supported by the PICWizard 
+01F4:  BCF    03.5
+01F5:  BSF    03.6
+01F6:  CLRF   07
+01F7:  CLRF   08
+01F8:  CLRF   09
+....................     enable_interrupts(INT_TIMER1); 
+01F9:  BSF    03.5
+01FA:  BCF    03.6
+01FB:  BSF    0C.0
 ....................     enable_interrupts(INT_SSP); 
-01D6:  BSF    0C.3
+01FC:  BSF    0C.3
 ....................     enable_interrupts(GLOBAL); 
-01D7:  MOVLW  C0
-01D8:  BCF    03.5
-01D9:  IORWF  0B,F
-.................... //Setup_Oscillator parameter not selected from Intr Oscillator Config tab 
-....................  
-....................     for (;;) 
-....................     { 
-....................         switch(estado) 
-....................         { 
-01DA:  MOVF   29,W
-01DB:  BTFSC  03.2
-01DC:  GOTO   1F6
-01DD:  XORLW  01
-01DE:  BTFSC  03.2
-01DF:  GOTO   201
-01E0:  XORLW  0A
-01E1:  BTFSC  03.2
-01E2:  GOTO   20F
-01E3:  XORLW  02
-01E4:  BTFSC  03.2
-01E5:  GOTO   24B
-01E6:  XORLW  04
-01E7:  BTFSC  03.2
-01E8:  GOTO   264
-01E9:  XORLW  08
-01EA:  BTFSC  03.2
-01EB:  GOTO   285
-01EC:  XORLW  10
-01ED:  BTFSC  03.2
-01EE:  GOTO   285
-01EF:  XORLW  08
-01F0:  BTFSC  03.2
-01F1:  GOTO   294
-01F2:  XORLW  30
-01F3:  BTFSC  03.2
-01F4:  GOTO   2B9
-01F5:  GOTO   2E4
-....................             case 0x00:              //Desenergizar motor 
-....................                 if(estadoAnterior & 0x01)    //antes estaba energizado 
-01F6:  BTFSS  2A.0
-01F7:  GOTO   200
-....................                 { 
-....................                     //Actualiza variables de estado 
-....................                     estadoAnterior = 0x00; 
-01F8:  CLRF   2A
-....................                     output_A(estado); 
-01F9:  MOVF   29,W
-01FA:  MOVWF  05
-....................                     //Actualiza variables de control del motor 
-....................                     disable_interrupts(INT_TIMER1); 
-01FB:  BSF    03.5
-01FC:  BCF    0C.0
-....................                     output_B(0x00); 
-01FD:  CLRF   06
+01FD:  MOVLW  C0
 01FE:  BCF    03.5
-01FF:  CLRF   06
-....................                 } 
-....................                 break; 
-0200:  GOTO   2E4
-....................             case 0x01:              //Energizar motor 
-....................                 //Actualiza variables de estado 
-....................                 output_A(estado); 
-0201:  MOVF   29,W
-0202:  MOVWF  05
-....................                 //Actualiza variables de control del motor 
-....................                 disable_interrupts(INT_TIMER1); 
-0203:  BSF    03.5
-0204:  BCF    0C.0
-....................                 output_B(STEP[stepIndex]); 
-0205:  BCF    03.5
-0206:  MOVF   31,W
-0207:  CALL   03A
-0208:  MOVWF  37
-0209:  BSF    03.5
-020A:  CLRF   06
-020B:  BCF    03.5
-020C:  MOVF   37,W
-020D:  MOVWF  06
-....................                 break; 
-020E:  GOTO   2E4
-....................             case 0x0B:              //Hacer homing 
-....................                 output_A(estado); 
-020F:  MOVF   29,W
-0210:  MOVWF  05
-....................                 output_high(PIN_C2);                                //informo que estoy ocupado 
-0211:  BCF    28.2
+01FF:  IORWF  0B,F
+.................... //Setup_Oscillator parameter not selected from Intr Oscillator Config tab 
+.................... 	setup_oscillator( OSC_8MHZ );  
+0200:  MOVLW  71
+0201:  BSF    03.5
+0202:  MOVWF  0F
+0203:  MOVF   0F,W
+....................  
+....................     if(input(PIN_C5)==1){ 
+0204:  BCF    03.5
+0205:  BSF    28.5
+0206:  MOVF   28,W
+0207:  BSF    03.5
+0208:  MOVWF  07
+0209:  BCF    03.5
+020A:  BTFSS  07.5
+020B:  GOTO   211
+....................         SSPADD = 0x10; 
+020C:  MOVLW  10
+020D:  BSF    03.5
+020E:  MOVWF  13
+....................     } 
+....................     else if(input(PIN_C5)==0){ 
+020F:  GOTO   21B
+0210:  BCF    03.5
+0211:  BSF    28.5
 0212:  MOVF   28,W
 0213:  BSF    03.5
 0214:  MOVWF  07
 0215:  BCF    03.5
-0216:  BSF    07.2
-....................                 //BUSCANDO FIN DE CARRERA 
-....................                 timerCarga = homingVel; 
-0217:  MOVLW  9C
-0218:  MOVWF  30
-0219:  MOVLW  40
-021A:  MOVWF  2F
-....................                 set_timer1(timerCarga);                    //Seteo la interrupcion del timer en una velocidad moderada 
-021B:  MOVF   30,W
-021C:  MOVWF  0F
-021D:  MOVF   2F,W
-021E:  MOVWF  0E
-....................                 posicionObjetivo = 10; 
-021F:  CLRF   35
-0220:  MOVLW  0A
-0221:  MOVWF  34
-....................                 enable_interrupts(INT_TIMER1);            //habilito la interrupcion del timer 
-0222:  BSF    03.5
-0223:  BSF    0C.0
-....................                 while(input(PIN_C0) == 0)                //mientras no reciba una señal del fin de carrera para homing 
-....................                 {                         
-0224:  BCF    03.5
-0225:  BSF    28.0
-0226:  MOVF   28,W
-0227:  BSF    03.5
-0228:  MOVWF  07
-0229:  BCF    03.5
-022A:  BTFSC  07.0
-022B:  GOTO   230
-....................                     posicionActual = 100;                //actualizo la posicion actual siempre superior a la posicion objetivo para que en la interrupcion se retroceda 
-022C:  CLRF   33
-022D:  MOVLW  64
-022E:  MOVWF  32
-....................                 } 
-022F:  GOTO   225
-....................                 //SEPARANDOSE DEL FIN DE CARRERA 
-....................                 timerCarga = finHomingVel;                    //seteo la interrupcion del timer en una velocidad lenta 
-0230:  MOVLW  15
-0231:  MOVWF  30
-0232:  MOVLW  A0
-0233:  MOVWF  2F
-....................                 posicionObjetivo = 100; 
-0234:  CLRF   35
-0235:  MOVLW  64
-0236:  MOVWF  34
-....................                 while(input(PIN_C0) == 1)                        //mientras el fin de carrera hace contacto 
+0216:  BTFSC  07.5
+0217:  GOTO   21C
+....................         SSPADD = 0x20; 
+0218:  MOVLW  20
+0219:  BSF    03.5
+021A:  MOVWF  13
+021B:  BCF    03.5
+....................     }         
+....................      
+....................     for (;;) 
+....................     { 
+....................         switch(estado) 
+....................         { 
+021C:  MOVF   29,W
+021D:  BTFSC  03.2
+021E:  GOTO   238
+021F:  XORLW  01
+0220:  BTFSC  03.2
+0221:  GOTO   24B
+0222:  XORLW  0A
+0223:  BTFSC  03.2
+0224:  GOTO   259
+0225:  XORLW  02
+0226:  BTFSC  03.2
+0227:  GOTO   295
+0228:  XORLW  06
+0229:  BTFSC  03.2
+022A:  GOTO   2AE
+022B:  XORLW  0A
+022C:  BTFSC  03.2
+022D:  GOTO   2CF
+022E:  XORLW  10
+022F:  BTFSC  03.2
+0230:  GOTO   2CF
+0231:  XORLW  18
+0232:  BTFSC  03.2
+0233:  GOTO   2DE
+0234:  XORLW  20
+0235:  BTFSC  03.2
+0236:  GOTO   303
+0237:  GOTO   32E
+....................             case 0x00:              //Desenergizar motor 
+....................                 if(estadoAnterior & 0x01)    //antes estaba energizado 
+0238:  BTFSS  2A.0
+0239:  GOTO   242
 ....................                 { 
-0237:  BSF    28.0
-0238:  MOVF   28,W
-0239:  BSF    03.5
-023A:  MOVWF  07
-023B:  BCF    03.5
-023C:  BTFSS  07.0
-023D:  GOTO   242
-....................                     posicionActual = 10;                    //actualiza la posicion actual a un valor inferior a la posición objetivo para que avance lentamente 
-023E:  CLRF   33
-023F:  MOVLW  0A
-0240:  MOVWF  32
+....................                     //Actualiza variables de estado 
+....................                     estadoAnterior = 0x00; 
+023A:  CLRF   2A
+....................                     output_A(estado); 
+023B:  MOVF   29,W
+023C:  MOVWF  05
+....................                     //Actualiza variables de control del motor 
+....................                     disable_interrupts(INT_TIMER1); 
+023D:  BSF    03.5
+023E:  BCF    0C.0
+....................                     output_B(0x00); 
+023F:  CLRF   06
+0240:  BCF    03.5
+0241:  CLRF   06
 ....................                 } 
-0241:  GOTO   237
-....................                 //FIN DEL HOMING 
-....................                 posicionActual = 0;                        //defino el origen 
-0242:  CLRF   33
-0243:  CLRF   32
-....................                 posicionObjetivo = 0;                    //no tengo un objetivo nuevo 
-0244:  CLRF   35
-0245:  CLRF   34
-....................                 estadoAnterior = 0x0B; 
-0246:  MOVLW  0B
-0247:  MOVWF  2A
-....................                 estado = 0x05;                            //paso a estado de reposo, ya referenciado 
-0248:  MOVLW  05
-0249:  MOVWF  29
+....................                 output_high(PIN_A0); 
+0242:  BSF    05.0
+.................... 				delay_ms(60); 
+0243:  MOVLW  3C
+0244:  MOVWF  3D
+0245:  CALL   17A
+.................... 				output_low(PIN_A0); 
+0246:  BCF    05.0
+.................... 				delay_ms(60); 
+0247:  MOVLW  3C
+0248:  MOVWF  3D
+0249:  CALL   17A
 ....................                 break; 
-024A:  GOTO   2E4
-....................             case 0x09:              //avanzando ciego para permitir al otro robot hacer el homing 
+024A:  GOTO   32E
+....................             case 0x01:              //Energizar motor 
 ....................                 //Actualiza variables de estado 
 ....................                 output_A(estado); 
 024B:  MOVF   29,W
 024C:  MOVWF  05
+....................                 //Actualiza variables de control del motor 
+....................                 disable_interrupts(INT_TIMER1); 
+024D:  BSF    03.5
+024E:  BCF    0C.0
+....................                 output_B(STEP[stepIndex]); 
+024F:  BCF    03.5
+0250:  MOVF   37,W
+0251:  CALL   03A
+0252:  MOVWF  3D
+0253:  BSF    03.5
+0254:  CLRF   06
+0255:  BCF    03.5
+0256:  MOVF   3D,W
+0257:  MOVWF  06
+....................                 break; 
+0258:  GOTO   32E
+....................             case 0x0B:              //Hacer homing 
+....................                 output_A(estado); 
+0259:  MOVF   29,W
+025A:  MOVWF  05
+....................                 output_high(PIN_C2);                                //informo que estoy ocupado 
+025B:  BCF    28.2
+025C:  MOVF   28,W
+025D:  BSF    03.5
+025E:  MOVWF  07
+025F:  BCF    03.5
+0260:  BSF    07.2
+....................                 //BUSCANDO FIN DE CARRERA 
+....................                 timerCarga = homingVel; 
+0261:  MOVF   34,W
+0262:  MOVWF  30
+0263:  MOVF   33,W
+0264:  MOVWF  2F
+....................                 set_timer1(timerCarga);                    //Seteo la interrupcion del timer en una velocidad moderada 
+0265:  MOVF   30,W
+0266:  MOVWF  0F
+0267:  MOVF   2F,W
+0268:  MOVWF  0E
+....................                 posicionObjetivo = 10; 
+0269:  CLRF   3B
+026A:  MOVLW  0A
+026B:  MOVWF  3A
+....................                 enable_interrupts(INT_TIMER1);            //habilito la interrupcion del timer 
+026C:  BSF    03.5
+026D:  BSF    0C.0
+....................                 while(input(PIN_C0) == 0)                //mientras no reciba una señal del fin de carrera para homing 
+....................                 {                         
+026E:  BCF    03.5
+026F:  BSF    28.0
+0270:  MOVF   28,W
+0271:  BSF    03.5
+0272:  MOVWF  07
+0273:  BCF    03.5
+0274:  BTFSC  07.0
+0275:  GOTO   27A
+....................                     posicionActual = 100;                //actualizo la posicion actual siempre superior a la posicion objetivo para que en la interrupcion se retroceda 
+0276:  CLRF   39
+0277:  MOVLW  64
+0278:  MOVWF  38
+....................                 } 
+0279:  GOTO   26F
+....................                 //SEPARANDOSE DEL FIN DE CARRERA 
+....................                 timerCarga = finHomingVel;                    //seteo la interrupcion del timer en una velocidad lenta 
+027A:  MOVF   36,W
+027B:  MOVWF  30
+027C:  MOVF   35,W
+027D:  MOVWF  2F
+....................                 posicionObjetivo = 100; 
+027E:  CLRF   3B
+027F:  MOVLW  64
+0280:  MOVWF  3A
+....................                 while(input(PIN_C0) == 1)                        //mientras el fin de carrera hace contacto 
+....................                 { 
+0281:  BSF    28.0
+0282:  MOVF   28,W
+0283:  BSF    03.5
+0284:  MOVWF  07
+0285:  BCF    03.5
+0286:  BTFSS  07.0
+0287:  GOTO   28C
+....................                     posicionActual = 10;                    //actualiza la posicion actual a un valor inferior a la posición objetivo para que avance lentamente 
+0288:  CLRF   39
+0289:  MOVLW  0A
+028A:  MOVWF  38
+....................                 } 
+028B:  GOTO   281
+....................                 //FIN DEL HOMING 
+....................                 posicionActual = 0;                        //defino el origen 
+028C:  CLRF   39
+028D:  CLRF   38
+....................                 posicionObjetivo = 0;                    //no tengo un objetivo nuevo 
+028E:  CLRF   3B
+028F:  CLRF   3A
+....................                 estadoAnterior = 0x0B; 
+0290:  MOVLW  0B
+0291:  MOVWF  2A
+....................                 estado = 0x05;                            //paso a estado de reposo, ya referenciado 
+0292:  MOVLW  05
+0293:  MOVWF  29
+....................                 break; 
+0294:  GOTO   32E
+....................             case 0x09:              //avanzando ciego para permitir al otro robot hacer el homing 
+....................                 //Actualiza variables de estado 
+....................                 output_A(estado); 
+0295:  MOVF   29,W
+0296:  MOVWF  05
 ....................              
 ....................                 //Actualiza variables de control del motor 
 ....................                 //AVANZANDO 
 ....................                 timerCarga = homingVel; 
-024D:  MOVLW  9C
-024E:  MOVWF  30
-024F:  MOVLW  40
-0250:  MOVWF  2F
+0297:  MOVF   34,W
+0298:  MOVWF  30
+0299:  MOVF   33,W
+029A:  MOVWF  2F
 ....................                 set_timer1(timerCarga);                    //Seteo la interrupcion del timer en una velocidad moderada 
-0251:  MOVF   30,W
-0252:  MOVWF  0F
-0253:  MOVF   2F,W
-0254:  MOVWF  0E
+029B:  MOVF   30,W
+029C:  MOVWF  0F
+029D:  MOVF   2F,W
+029E:  MOVWF  0E
 ....................                 posicionObjetivo = 100; 
-0255:  CLRF   35
-0256:  MOVLW  64
-0257:  MOVWF  34
+029F:  CLRF   3B
+02A0:  MOVLW  64
+02A1:  MOVWF  3A
 ....................                 enable_interrupts(INT_TIMER1);            //habilito la interrupcion del timer 
-0258:  BSF    03.5
-0259:  BSF    0C.0
+02A2:  BSF    03.5
+02A3:  BSF    0C.0
 ....................                  
 ....................                 //Loop para desplazarce hasta que el master indique detenerse (orden 'X') 
 ....................                 while(estado == 0x09){                    //mientras no reciba una mensaje del master de cambiar de estado, dejar de avanzar 
-025A:  BCF    03.5
-025B:  MOVF   29,W
-025C:  SUBLW  09
-025D:  BTFSS  03.2
-025E:  GOTO   263
+02A4:  BCF    03.5
+02A5:  MOVF   29,W
+02A6:  SUBLW  09
+02A7:  BTFSS  03.2
+02A8:  GOTO   2AD
 ....................                     posicionActual = 10;                //actualizo la posicion actual siempre superior a la posicion objetivo para que en la interrupcion avance 
-025F:  CLRF   33
-0260:  MOVLW  0A
-0261:  MOVWF  32
+02A9:  CLRF   39
+02AA:  MOVLW  0A
+02AB:  MOVWF  38
 ....................                 } 
-0262:  GOTO   25B
+02AC:  GOTO   2A5
 ....................                 break; 
-0263:  GOTO   2E4
-....................             case 0x0D:              //avanza para permitir al otro motor hacer homing, sin perder la referencia 
+02AD:  GOTO   32E
+....................             case 0x0F:              //avanza para permitir al otro motor hacer homing, sin perder la referencia 
 ....................                 //Actualiza variables de estado 
 ....................                 output_A(estado); 
-0264:  MOVF   29,W
-0265:  MOVWF  05
+02AE:  MOVF   29,W
+02AF:  MOVWF  05
 ....................  
 ....................                 //Actualiza variables de control del motor 
 ....................                 //AVANZANDO 
 ....................                 timerCarga = homingVel; 
-0266:  MOVLW  9C
-0267:  MOVWF  30
-0268:  MOVLW  40
-0269:  MOVWF  2F
+02B0:  MOVF   34,W
+02B1:  MOVWF  30
+02B2:  MOVF   33,W
+02B3:  MOVWF  2F
 ....................                 set_timer1(timerCarga);                    //Seteo la interrupcion del timer en una velocidad moderada 
-026A:  MOVF   30,W
-026B:  MOVWF  0F
-026C:  MOVF   2F,W
-026D:  MOVWF  0E
+02B4:  MOVF   30,W
+02B5:  MOVWF  0F
+02B6:  MOVF   2F,W
+02B7:  MOVWF  0E
 ....................                 posicionObjetivo = posicionActual + 50;    //pongo un objetivo 'adelante' de la posicion actual 
-026E:  MOVLW  32
-026F:  ADDWF  32,W
-0270:  MOVWF  34
-0271:  MOVF   33,W
-0272:  MOVWF  35
-0273:  BTFSC  03.0
-0274:  INCF   35,F
+02B8:  MOVLW  32
+02B9:  ADDWF  38,W
+02BA:  MOVWF  3A
+02BB:  MOVF   39,W
+02BC:  MOVWF  3B
+02BD:  BTFSC  03.0
+02BE:  INCF   3B,F
 ....................                 enable_interrupts(INT_TIMER1);            //habilito la interrupcion del timer 
-0275:  BSF    03.5
-0276:  BSF    0C.0
+02BF:  BSF    03.5
+02C0:  BSF    0C.0
 ....................  
 ....................                 //Loop para desplazarce hasta que el master indique detenerse (orden 'X') 
-....................                 while(estado == 0x0D){                    //mientras no reciba una mensaje del master de cambiar de estado, dejar de avanzar 
-0277:  BCF    03.5
-0278:  MOVF   29,W
-0279:  SUBLW  0D
-027A:  BTFSS  03.2
-027B:  GOTO   284
+....................                 while(estado == 0x0F){                    //mientras no reciba una mensaje del master de cambiar de estado, dejar de avanzar 
+02C1:  BCF    03.5
+02C2:  MOVF   29,W
+02C3:  SUBLW  0F
+02C4:  BTFSS  03.2
+02C5:  GOTO   2CE
 ....................                     posicionObjetivo = posicionActual + 50;                //actualizo la posicion actual siempre superior a la posicion objetivo para que en la interrupcion avance 
-027C:  MOVLW  32
-027D:  ADDWF  32,W
-027E:  MOVWF  34
-027F:  MOVF   33,W
-0280:  MOVWF  35
-0281:  BTFSC  03.0
-0282:  INCF   35,F
+02C6:  MOVLW  32
+02C7:  ADDWF  38,W
+02C8:  MOVWF  3A
+02C9:  MOVF   39,W
+02CA:  MOVWF  3B
+02CB:  BTFSC  03.0
+02CC:  INCF   3B,F
 ....................                 } 
-0283:  GOTO   278
+02CD:  GOTO   2C2
 ....................                 break; 
-0284:  GOTO   2E4
+02CE:  GOTO   32E
 ....................             case 0x05: 
 ....................             case 0x15:                                //Estado de reposo, energizado y referenciado 
 ....................                 if (estadoAnterior & 0x08)    //anteriormente se estaba moviendo 
-0285:  BTFSS  2A.3
-0286:  GOTO   293
+02CF:  BTFSS  2A.3
+02D0:  GOTO   2DD
 ....................                 { 
 ....................                     //Actualiza variables de estado 
 ....................                     estadoAnterior = estadoAnterior & 0xEF;	//pongo a 0 el bit que indica movimiento 
-0287:  BCF    2A.4
+02D1:  BCF    2A.4
 ....................                     output_low(PIN_C2);                                //informo que estoy desocupado 
-0288:  BCF    28.2
-0289:  MOVF   28,W
-028A:  BSF    03.5
-028B:  MOVWF  07
-028C:  BCF    03.5
-028D:  BCF    07.2
+02D2:  BCF    28.2
+02D3:  MOVF   28,W
+02D4:  BSF    03.5
+02D5:  MOVWF  07
+02D6:  BCF    03.5
+02D7:  BCF    07.2
 ....................                     output_A(estado); 
-028E:  MOVF   29,W
-028F:  MOVWF  05
+02D8:  MOVF   29,W
+02D9:  MOVWF  05
 ....................  
 ....................                     //Actualiza variables de control del motor 
 ....................                     disable_interrupts(INT_TIMER1); 
-0290:  BSF    03.5
-0291:  BCF    0C.0
-0292:  BCF    03.5
+02DA:  BSF    03.5
+02DB:  BCF    0C.0
+02DC:  BCF    03.5
 ....................                 } 
 ....................                 break; 
-0293:  GOTO   2E4
-....................             case 0x1D: 
+02DD:  GOTO   32E
+....................             case 0x0D: 
 ....................                 //Actualiza variables de estado 
 ....................                 output_A(estado); 
-0294:  MOVF   29,W
-0295:  MOVWF  05
+02DE:  MOVF   29,W
+02DF:  MOVWF  05
 ....................                 output_high(PIN_C2);                                //informo que estoy ocupado 
-0296:  BCF    28.2
-0297:  MOVF   28,W
-0298:  BSF    03.5
-0299:  MOVWF  07
-029A:  BCF    03.5
-029B:  BSF    07.2
+02E0:  BCF    28.2
+02E1:  MOVF   28,W
+02E2:  BSF    03.5
+02E3:  MOVWF  07
+02E4:  BCF    03.5
+02E5:  BSF    07.2
 ....................  
 ....................                 //Actualiza variables de control del motor 
 ....................                 timerCarga = pasoRapido; 
-029C:  MOVLW  F0
-029D:  MOVWF  30
-029E:  MOVLW  3C
-029F:  MOVWF  2F
+02E6:  MOVF   32,W
+02E7:  MOVWF  30
+02E8:  MOVF   31,W
+02E9:  MOVWF  2F
 ....................                 set_timer1(timerCarga); 
-02A0:  MOVF   30,W
-02A1:  MOVWF  0F
-02A2:  MOVF   2F,W
-02A3:  MOVWF  0E
+02EA:  MOVF   30,W
+02EB:  MOVWF  0F
+02EC:  MOVF   2F,W
+02ED:  MOVWF  0E
 ....................                 enable_interrupts(INT_TIMER1); 
-02A4:  BSF    03.5
-02A5:  BSF    0C.0
+02EE:  BSF    03.5
+02EF:  BSF    0C.0
 ....................                  
 ....................                 //Loop hasta llegar a la posición objetivo 
-....................                 while(estado == 0x1D)    //el bucle no es while(posicionActual!=posicionObjetivo) para permitir cortar el avance con la orden 'X'                { 
+....................                 while(estado == 0x0D)    //el bucle no es while(posicionActual!=posicionObjetivo) para permitir cortar el avance con la orden 'X' 
 ....................                 { 
-02A6:  BCF    03.5
-02A7:  MOVF   29,W
-02A8:  SUBLW  1D
-02A9:  BTFSS  03.2
-02AA:  GOTO   2B4
+02F0:  BCF    03.5
+02F1:  MOVF   29,W
+02F2:  SUBLW  0D
+02F3:  BTFSS  03.2
+02F4:  GOTO   2FE
 .................... 	                if (posicionActual == posicionObjetivo) 
-02AB:  MOVF   34,W
-02AC:  SUBWF  32,W
-02AD:  BTFSS  03.2
-02AE:  GOTO   2B3
-02AF:  MOVF   35,W
-02B0:  SUBWF  33,W
-02B1:  BTFSC  03.2
+02F5:  MOVF   3A,W
+02F6:  SUBWF  38,W
+02F7:  BTFSS  03.2
+02F8:  GOTO   2FD
+02F9:  MOVF   3B,W
+02FA:  SUBWF  39,W
+02FB:  BTFSC  03.2
 ....................                         break; 
-02B2:  GOTO   2B4
+02FC:  GOTO   2FE
 ....................                 } 
-02B3:  GOTO   2A7
-....................                 estadoAnterior = 0x1D; 
-02B4:  MOVLW  1D
-02B5:  MOVWF  2A
+02FD:  GOTO   2F1
+....................                 estadoAnterior = 0x0D; 
+02FE:  MOVLW  0D
+02FF:  MOVWF  2A
 ....................                 estado = 0x05; 
-02B6:  MOVLW  05
-02B7:  MOVWF  29
+0300:  MOVLW  05
+0301:  MOVWF  29
 ....................                 break; 
-02B8:  GOTO   2E4
+0302:  GOTO   32E
 ....................             case 0x2D: 
 ....................                 //Actualiza variables de estado 
 ....................                 output_A(estado); 
-02B9:  MOVF   29,W
-02BA:  MOVWF  05
+0303:  MOVF   29,W
+0304:  MOVWF  05
 ....................  
 ....................                 while(input(PIN_C1) == 0){	//Espera a que el dispositivo de escritura sea accionado 
-02BB:  BSF    28.1
-02BC:  MOVF   28,W
-02BD:  BSF    03.5
-02BE:  MOVWF  07
-02BF:  BCF    03.5
-02C0:  BTFSS  07.1
+0305:  BSF    28.1
+0306:  MOVF   28,W
+0307:  BSF    03.5
+0308:  MOVWF  07
+0309:  BCF    03.5
+030A:  BTFSS  07.1
 ....................                 } 
-02C1:  GOTO   2BB
+030B:  GOTO   305
 ....................  
 ....................                 //Actualiza variables de control del motor 
 ....................                 enable_interrupts(INT_TIMER1); 
-02C2:  BSF    03.5
-02C3:  BSF    0C.0
+030C:  BSF    03.5
+030D:  BSF    0C.0
 ....................  
 ....................                 output_high(PIN_C2);                                //informo que estoy ocupado 
-02C4:  BCF    03.5
-02C5:  BCF    28.2
-02C6:  MOVF   28,W
-02C7:  BSF    03.5
-02C8:  MOVWF  07
-02C9:  BCF    03.5
-02CA:  BSF    07.2
+030E:  BCF    03.5
+030F:  BCF    28.2
+0310:  MOVF   28,W
+0311:  BSF    03.5
+0312:  MOVWF  07
+0313:  BCF    03.5
+0314:  BSF    07.2
 ....................                  
 ....................                 //Loop hasta llegar a la posición objetivo 
 ....................                 while((estado == 0x2D) && (input(PIN_C1)==1))    //el bucle no es while(posicionActual!=posicionObjetivo) para permitir cortar el avance con la orden 'X'                { 
 ....................                 { 
-02CB:  MOVF   29,W
-02CC:  SUBLW  2D
-02CD:  BTFSS  03.2
-02CE:  GOTO   2DF
-02CF:  BSF    28.1
-02D0:  MOVF   28,W
-02D1:  BSF    03.5
-02D2:  MOVWF  07
-02D3:  BCF    03.5
-02D4:  BTFSS  07.1
-02D5:  GOTO   2DF
+0315:  MOVF   29,W
+0316:  SUBLW  2D
+0317:  BTFSS  03.2
+0318:  GOTO   329
+0319:  BSF    28.1
+031A:  MOVF   28,W
+031B:  BSF    03.5
+031C:  MOVWF  07
+031D:  BCF    03.5
+031E:  BTFSS  07.1
+031F:  GOTO   329
 .................... 	                if (posicionActual == posicionObjetivo) 
-02D6:  MOVF   34,W
-02D7:  SUBWF  32,W
-02D8:  BTFSS  03.2
-02D9:  GOTO   2DE
-02DA:  MOVF   35,W
-02DB:  SUBWF  33,W
-02DC:  BTFSC  03.2
+0320:  MOVF   3A,W
+0321:  SUBWF  38,W
+0322:  BTFSS  03.2
+0323:  GOTO   328
+0324:  MOVF   3B,W
+0325:  SUBWF  39,W
+0326:  BTFSC  03.2
 ....................                         break; 
-02DD:  GOTO   2DF
+0327:  GOTO   329
 ....................                 } 
-02DE:  GOTO   2CB
+0328:  GOTO   315
 ....................                 estadoAnterior = 0x2D; 
-02DF:  MOVLW  2D
-02E0:  MOVWF  2A
+0329:  MOVLW  2D
+032A:  MOVWF  2A
 ....................                 estado = 0x05; 
-02E1:  MOVLW  05
-02E2:  MOVWF  29
+032B:  MOVLW  05
+032C:  MOVWF  29
 ....................                 break; 
-02E3:  GOTO   2E4
+032D:  GOTO   32E
 ....................         } 
 ....................     } 
-02E4:  GOTO   1DA
+032E:  GOTO   21C
 .................... } 
-02E5:  SLEEP
+032F:  SLEEP
 
 Configuration Fuses:
-   Word  1: 2CF2   HS NOWDT NOPUT MCLR NOPROTECT NOCPD NOBROWNOUT IESO FCMEN NOLVP NODEBUG
+   Word  1: 2CF5   INTRC NOWDT NOPUT MCLR NOPROTECT NOCPD NOBROWNOUT IESO FCMEN NOLVP NODEBUG
    Word  2: 3FFF   NOWRT BORV40

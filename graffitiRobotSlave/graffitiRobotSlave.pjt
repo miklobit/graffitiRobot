@@ -1,0 +1,26 @@
+[PROJECT]
+Target=C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\graffitiRobotSlave.hex
+Development_Mode=
+Processor_Text=PIC16F886
+ToolSuite=CCS
+Processor=0x886F
+[C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\graffitiRobotSlave]
+Type=4
+Path=
+FileList=
+BuildTool=
+OptionString=
+AdditionalOptionString=
+[mru-list]
+1=C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\graffitiRobotSlave.c
+[Windows]
+0=0000 %S 0 0 796 451 3 0
+[Units]
+Link=0
+Count=1
+1=C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\graffitiRobotSlave
+[Opened Files]
+1=graffitiRobotSlave.c
+2=graffitiRobotSlave.h
+3=..\..\..\..\..\..\..\Program Files\PICC\devices\16F886.h
+4=

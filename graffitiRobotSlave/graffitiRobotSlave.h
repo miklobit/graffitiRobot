@@ -2,7 +2,7 @@
 #device adc=8
 
 #FUSES NOWDT                 	//No Watch Dog Timer
-#FUSES HS                    	//High speed Osc (> 4mhz for PCM/PCH) (>10mhz for PCD)
+#FUSES INTRC                    	//High speed Osc (> 4mhz for PCM/PCH) (>10mhz for PCD)
 #FUSES NOPUT                 	//No Power Up Timer
 #FUSES MCLR                  	//Master Clear pin enabled
 #FUSES NOPROTECT             	//Code not protected from reading
@@ -16,8 +16,8 @@
 #FUSES BORV40                	//Brownout reset at 4.0V
 #FUSES RESERVED              	//Used to set the reserved FUSE bits
 
-#use delay(clock=20000000)
-#use i2c(Slave,Fast,sda=PIN_C4,scl=PIN_C3,address=0x10)
+#use delay(clock=8000000)
+#use i2c(Slave,Fast,sda=PIN_C4,scl=PIN_C3,address=0x1F)
 #use fast_io(A)
 
 #BYTE PORTA = 0x05
@@ -28,3 +28,6 @@
 
 #BYTE PORTC = 0x07
 #BYTE TRISC = 0x87
+
+#BYTE SSPADD = 0x93
+

@@ -1,4 +1,4 @@
-#include "C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\1SlaveUpLeft\graffitiRobotSlave1.h"
+#include "C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\graffitiRobotSlave.h"
 
 /*****************************************************************************/
 /**********************        Variables Globales        *********************/
@@ -14,11 +14,24 @@ int8 numero1;
 int8 numero2;
 
 /** Variables para cotrol del robot**/
+#define Fclock 20000000 //Frecuencia del oscilador	20MHz
+#define Fcy Fclock/4    //Frecuencia Interna 		5MHz
+#define T1pre   1       //Prescaler Timer1
+#define fTimer1	Fcy/T1pre //Freciencia Timer1 		5MHz
+#define tTimer1_NS	1000000000/fTimer1 //Periodo del Timer1 en nseg	200 nseg
+
+#define OVERHEAD 50	//VERIFICAR?
+#define PASORAPIDO_NS 30000
+#define PASOHOMING_NS 150000
+#define PASOFINHOMING_NS 600000
+
 /*-Variables de control de la interrupcion del timer-*/
 unsigned int16 timerCarga;
-const int16 pasoRapido = 0xF03C;                             //velocidad máxima de avance del motor (1 paso cada 30 us -> 65386)
-const int16 homingVel = 0x9C40;                             //velocidad para realización del homing (1 paso cada 150 us -> 64786)
-const int16 finHomingVel = 0x15A0;                             //velocidad para terminar el homing (1 paso cada 600 us -> 64786)
+int16 tt1 = (int16)(1000000000/((20000000/4)/T1pre));
+int16 tPasoRapido = (int16)(PASORAPIDO_NS/tTimer1_NS);
+int16 pasoRapido = 0xFFFF - OVERHEAD - tPasoRapido;          //velocidad máxima de avance del motor (1 paso cada 30 us -> 65386)
+int16 homingVel = 0xFFFF - OVERHEAD - PASOHOMING_NS/tTimer1_NS;           //velocidad para realización del homing (1 paso cada 150 us -> 64786)
+int16 finHomingVel = 0xFFFF - OVERHEAD - PASOFINHOMING_NS/tTimer1_NS;		//velocidad para terminar el homing (1 paso cada 600 us -> 64786)
 /*-Variables de control de pasos-*/
 const int8 STEP[] = {0x01,0x03,0x02,0x06,0x04,0x0C,0x08,0x09};    //valores para el puerto de salida de los pasos
 unsigned int stepIndex;                                            //apuntador al paso actual
@@ -198,6 +211,7 @@ void main()
     bit_set(TRISC,0);    //RC0 entrada
     bit_set(TRISC,1);    //RC1 entrada
     bit_clear(TRISC,2);    //RC2 salida
+    bit_set(TRISC,5);    //RC5 entrada
 
     bit_clear(PORTC,2);    //RC2=0
 
@@ -217,6 +231,13 @@ void main()
     enable_interrupts(GLOBAL);
 //Setup_Oscillator parameter not selected from Intr Oscillator Config tab
 
+    if(input(PIN_C5)==1){
+        SSPADD = 0x10;
+    }
+    else if(input(PIN_C5)==0){
+        SSPADD = 0x20;
+    }        
+    
     for (;;)
     {
         switch(estado)

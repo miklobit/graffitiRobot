@@ -1,9 +1,11 @@
-ÀÄgraffitiRobotSlave2
-   ÃÄMAIN  0/388  Ram=1
+ÀÄgraffitiRobotSlave
+   ÃÄMAIN  0/418  Ram=1
    ³  ÃÄ??0??
-   ³  ÀÄ@const87  0/12  Ram=0
+   ³  ÃÄ@delay_ms1  0/20  Ram=1
+   ³  ÃÄ@delay_ms1  0/20  Ram=1
+   ³  ÀÄ@const85  0/12  Ram=0
    ÃÄTIMER1_isr  0/58  Ram=1
-   ³  ÀÄ@const87  0/12  Ram=0
+   ³  ÀÄ@const85  0/12  Ram=0
    ÀÄSSP_isr  0/228  Ram=1
       ÃÄ@I2C_WRITE_1  (Inline)  Ram=1
       ÀÄinterpreta  (Inline)  Ram=0

@@ -1,6 +1,6 @@
 
-ROM used: 5130 (63%)
-          5255 (64%) including unused fragments
+ROM used: 5183 (63%)
+          5308 (65%) including unused fragments
 
           2 Average locations per line
           10 Average locations per statement
@@ -12,12 +12,12 @@ Stack used: 5 worst case (out of 8 total available)
 
 Lines Stmts  %   Files
 ----- ----- ---  -----
-  445   255  50  graffitiRobotMaster.c
+  451   261  50  graffitiRobotMaster.c
    30     0   0  graffitiRobotMaster.h
   413     0   0  ..\..\..\..\..\..\..\Program Files\PICC\devices\16F886.h
  2172   260  50  ..\..\..\..\..\..\..\Program Files\PICC\drivers\math.h
 ----- -----
- 3060   515 Total
+ 3066   521 Total
 
 Page ROM  %  RAM   Vol Diff  Functions:
 ---- --- --- ---   --- ----  ----------
@@ -60,7 +60,7 @@ Page ROM  %  RAM   Vol Diff  Functions:
 0     25   0   0             @const307
 0     19   0   0             @const308
 0    700  14   3   383  6.5  RDA_isr
-2   1159  23   8  5196  8.9  MAIN
+2   1212  23   8  5431  8.9  MAIN
 0     10   0   0             @const314
 0      8   0   0             @const315
 0     11   0   0             @const316
@@ -78,12 +78,12 @@ Page ROM  %  RAM   Vol Diff  Functions:
 
 Program metrics:
     Functions               12
-    Statements              515
+    Statements              521
     Comments                459
-    Volume (V)              15273
-    Difficilty (D)          61.5
-    Effort to implement (E) 939783
-    Time to implement (T)   14 hours, 30 minutes
+    Volume (V)              15539
+    Difficilty (D)          61.6
+    Effort to implement (E) 957115
+    Time to implement (T)   14 hours, 46 minutes
     Est Delivered Bugs (B)  3
     Cyclomatic Complexity   46
     Maintainability (MI)    64
@@ -94,7 +94,7 @@ Program metrics:
 00004-00030    45  0  
 00031-007FF  1974  25  
 00800-00FFF  1948  100  
-01000-017FF  1159  889  
+01000-017FF  1212  836  
 01800-01FFF     0  2048  
 
 

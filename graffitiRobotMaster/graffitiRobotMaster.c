@@ -28,8 +28,8 @@ const float32 anchoDibujo = 1767.766953;		//MAX 2573.6-->> cantidad de pasos max
 /*-variables constructivas-*/
 const float32 pasoDist = 25.4648; //1paso/0.9grados*360grados/(pi*5)mm
 /** Variables para el calculo de tiempo de interrupcion de timers**/
-const int16 Vmax = 0xF03C;
-const int16 IntTimMin = 0x0FC3; //intervalo de interrupcion de la velocidad maxima 4036=65536-61500 (0x0FC4=0xFFFF-0xF03C)
+const int16 Vmax = 0xF9B1;
+const int16 IntTimMin = 0x064E; //intervalo de interrupcion de la velocidad maxima 1614=65536-63921 (0x064E=0xFFFF-0xF9B1)
 
 /******************************************************************************/
 /*********************  FUNCION ENVIO A PICS ESCLAVOS *************************/
@@ -80,7 +80,7 @@ void timersSetting(void)
 	else
 		distEscDer = objFinEscDer - objIniEscDer;
 
-	if (distEscDer < distEscIzq)
+	if (distEscDer > distEscIzq)
 	{
 		orden = 'T';
 		opcion1 = 0xF0;		//la velocidad máxima es a 0xF03C
@@ -93,7 +93,7 @@ void timersSetting(void)
 		printf("Esclavo 2 -> Vel = %lx\r", vel2);
 		Envio_I2C(dirEsclavo2, orden, opcion1, opcion2);
 	}
-	else if (distEscDer > distEscIzq)
+	else if (distEscDer < distEscIzq)
 	{
 		orden = 'T';
 		vel2 = 0xFFFF-(int16)((distEscDer/distEscIzq)*(float32)IntTimMin);	//Como el movimiento es coordinado (en el mismo tiempo), las velocidades son directamente proporcionales a las distancias
@@ -319,8 +319,10 @@ void main(void)
 	enable_interrupts(INT_RDA);
 	enable_interrupts(GLOBAL);
 //Setup_Oscillator parameter not selected from Intr Oscillator Config tab
+	setup_oscillator( OSC_8MHZ ); 
 
 	printf("OK\r");
+	delay_ms(60);
 	for (;;)
 	{
 		switch(estado)
@@ -336,6 +338,10 @@ void main(void)
 					Envio_I2C(dirEsclavo2 , orden, opcion1, opcion2);
 					output_A(estado);
 				}
+				output_high(PIN_A0);
+				delay_ms(60);
+				output_low(PIN_A0);
+				delay_ms(60);
 				break;
 			case 0x01:					//Solicitar energizar motores a los esclavos
 				if (estadoAnterior == 0x00)

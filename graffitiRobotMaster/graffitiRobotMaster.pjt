@@ -20,7 +20,7 @@ Link=0
 Count=1
 1=C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotMaster\graffitiRobotMaster
 [Opened Files]
-1=graffitiRobotMaster.c
+1=..\graffitiRobotMaster\graffitiRobotMaster.c
 2=graffitiRobotMaster.h
 3=..\..\..\..\..\..\..\Program Files\PICC\devices\16F886.h
 4=

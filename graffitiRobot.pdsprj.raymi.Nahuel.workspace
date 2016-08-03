@@ -1,9 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
 <WORKSPACE>
- <FRAME activewindow="0">
-  <PLACEMENT>2c0000000200000003000000ffffffffffffffffffffffffffffffff6c00000018000000960600000e040000</PLACEMENT>
-  <WINDOW type="default" module="ISIS"/>
+ <FRAME activewindow="1">
+  <PLACEMENT>2c00000002000000020000000083ffff0083ffffffffffffffffffff0000000084000000ac050000e5030000</PLACEMENT>
   <WINDOW type="default" module="ARES"/>
+  <WINDOW type="default" module="ISIS"/>
+  <WINDOW type="default" module="DXP"/>
  </FRAME>
  <MODULE name="VSMDEBUG">
   <PWI>
@@ -34,7 +35,7 @@
      <ITEM name="nItems">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="552" x="169" flags="00000023" y="111" h="250" pid="0" iid="22">
+   <POPUP w="552" x="171" flags="00000023" y="424" h="250" pid="0" iid="22">
     <PROPERTIES>
      <ITEM name="ComboBox1000">S</ITEM>
      <ITEM name="ComboBox1001">Sr</ITEM>
@@ -56,7 +57,7 @@
    <POPUP w="695" x="0" flags="00000000" y="552" h="453" pid="0" iid="21">
     <PROPERTIES/>
    </POPUP>
-   <POPUP w="450" x="1416" flags="00008063" y="717" h="250" pid="0" iid="23">
+   <POPUP w="450" x="1469" flags="00008063" y="717" h="250" pid="0" iid="23">
     <PROPERTIES>
      <ITEM name="AutoEcho">1</ITEM>
      <ITEM name="HexMode">0</ITEM>
@@ -200,11 +201,11 @@
      <ITEM name="TopLineAddress">00000000</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="600" x="20" flags="0000002b" y="596" h="400" pid="1" iid="1">
+   <POPUP w="886" x="15" flags="0000002b" y="485" h="531" pid="1" iid="1">
     <PROPERTIES>
-     <ITEM name="Breakpoint 0">"",0DE6,0000,85A1,2E1D,1
+     <ITEM name="Breakpoint 0">"",0D09,0000,0B66,2E1D,1
 </ITEM>
-     <ITEM name="Breakpoint 1">"",0EA2,0000,9C21,2E1D,1
+     <ITEM name="Breakpoint 1">"",0D77,0000,1AB1,2E1D,1
 </ITEM>
      <ITEM name="Breakpoint 2">"",1033,0000,60CD,2E1D,1
 </ITEM>
@@ -218,10 +219,10 @@
      <ITEM name="DISPOPCODES">No</ITEM>
      <ITEM name="FIXUPBPTS">Yes</ITEM>
      <ITEM name="WordsOnly">No</ITEM>
-     <ITEM name="nBreakpoints">0</ITEM>
+     <ITEM name="nBreakpoints">1</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="663" x="14" flags="0000000b" y="216" h="541" pid="2" iid="1">
+   <POPUP w="419" x="579" flags="0000000b" y="0" h="495" pid="2" iid="1">
     <PROPERTIES>
      <ITEM name="Address Column Width">94</ITEM>
      <ITEM name="AutoResize">No</ITEM>
@@ -239,9 +240,15 @@
      <ITEM name="nItems">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="600" x="477" flags="0000002b" y="0" h="400" pid="1" iid="2">
+   <POPUP w="600" x="1037" flags="0000002b" y="93" h="400" pid="1" iid="2">
     <PROPERTIES>
-     <ITEM name="Breakpoint 0">"",0063,0000,510C,FEA2,1
+     <ITEM name="Breakpoint 0">"",01DB,0000,F260,C60A,1
+</ITEM>
+     <ITEM name="Breakpoint 1">"",01EA,0000,2B95,C60A,1
+</ITEM>
+     <ITEM name="Breakpoint 2">"",01EA,0000,5EEB,C60A,1
+</ITEM>
+     <ITEM name="Breakpoint 3">"",01F2,0000,E9F3,C60A,1
 </ITEM>
      <ITEM name="CaseSensitive">No</ITEM>
      <ITEM name="DISPADDRS">Yes</ITEM>
@@ -252,7 +259,7 @@
      <ITEM name="nBreakpoints">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="373" x="861" flags="0000000b" y="54" h="430" pid="2" iid="2">
+   <POPUP w="373" x="1063" flags="0000000b" y="202" h="430" pid="2" iid="2">
     <PROPERTIES>
      <ITEM name="Address Column Width">94</ITEM>
      <ITEM name="AutoResize">No</ITEM>
@@ -269,13 +276,13 @@
      <ITEM name="nItems">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="600" x="764" flags="0000002b" y="547" h="400" pid="1" iid="3">
+   <POPUP w="600" x="1174" flags="0000002b" y="157" h="400" pid="1" iid="3">
     <PROPERTIES>
-     <ITEM name="Breakpoint 0">"",02E5,0000,E5B1,DB4E,-1
+     <ITEM name="Breakpoint 0">"",021D,0000,14B2,C60A,1
 </ITEM>
-     <ITEM name="Breakpoint 1">"",0132,0000,677E,DB4E,1
+     <ITEM name="Breakpoint 1">"",01EA,0000,2B95,DB4E,1
 </ITEM>
-     <ITEM name="Breakpoint 2">"",0118,0000,A280,DB4E,1
+     <ITEM name="Breakpoint 2">"",02E5,0000,563C,DB4E,-1
 </ITEM>
      <ITEM name="Breakpoint 3">"",022E,0000,8AA4,DB4E,1
 </ITEM>
@@ -291,10 +298,10 @@
      <ITEM name="DISPOPCODES">No</ITEM>
      <ITEM name="FIXUPBPTS">Yes</ITEM>
      <ITEM name="WordsOnly">No</ITEM>
-     <ITEM name="nBreakpoints">1</ITEM>
+     <ITEM name="nBreakpoints">0</ITEM>
     </PROPERTIES>
    </POPUP>
-   <POPUP w="360" x="356" flags="0000000b" y="360" h="538" pid="2" iid="3">
+   <POPUP w="360" x="1199" flags="0000000b" y="241" h="538" pid="2" iid="3">
     <PROPERTIES>
      <ITEM name="Address Column Width">94</ITEM>
      <ITEM name="AutoResize">No</ITEM>

@@ -1,7 +1,7 @@
->>> Warning 216 "graffitiRobotMaster.c" Line 446(0,1): Interrupts disabled during call to prevent re-entrancy:  (@I2C_WRITE_1)
->>> Warning 216 "graffitiRobotMaster.c" Line 446(0,1): Interrupts disabled during call to prevent re-entrancy:  (@delay_ms1)
->>> Warning 216 "graffitiRobotMaster.c" Line 446(0,1): Interrupts disabled during call to prevent re-entrancy:  (@PSTRINGCN7_9600_62_63)
->>> Warning 216 "graffitiRobotMaster.c" Line 446(0,1): Interrupts disabled during call to prevent re-entrancy:  (@PRINTF_X_9600_62_63)
->>> Warning 216 "graffitiRobotMaster.c" Line 446(0,1): Interrupts disabled during call to prevent re-entrancy:  (@PSTRINGC7_9600_62_63)
+>>> Warning 216 "graffitiRobotMaster.c" Line 452(0,1): Interrupts disabled during call to prevent re-entrancy:  (@I2C_WRITE_1)
+>>> Warning 216 "graffitiRobotMaster.c" Line 452(0,1): Interrupts disabled during call to prevent re-entrancy:  (@delay_ms1)
+>>> Warning 216 "graffitiRobotMaster.c" Line 452(0,1): Interrupts disabled during call to prevent re-entrancy:  (@PSTRINGCN7_9600_62_63)
+>>> Warning 216 "graffitiRobotMaster.c" Line 452(0,1): Interrupts disabled during call to prevent re-entrancy:  (@PRINTF_X_9600_62_63)
+>>> Warning 216 "graffitiRobotMaster.c" Line 452(0,1): Interrupts disabled during call to prevent re-entrancy:  (@PSTRINGC7_9600_62_63)
       Memory usage:   ROM=63%      RAM=18% - 35%
       0 Errors,  5 Warnings.

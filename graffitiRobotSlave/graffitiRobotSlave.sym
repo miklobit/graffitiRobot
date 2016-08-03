@@ -3,11 +3,11 @@
 005     PORTA
 006     PORTB
 007     PORTC
-015     CCP_1
 015     CCP_1_LOW
+015     CCP_1
 016     CCP_1_HIGH
-01B     CCP_2
 01B     CCP_2_LOW
+01B     CCP_2
 01C     CCP_2_HIGH
 020     @INTERRUPT_AREA
 021     @INTERRUPT_AREA
@@ -25,22 +25,26 @@
 02D     numero1
 02E     numero2
 02F-030 timerCarga
-031     stepIndex
-032-033 posicionActual
-034-035 posicionObjetivo
-036     @I2C_STATE
-037     MAIN.@SCRATCH1
-038     SSP_isr.incoming
-038     TIMER1_isr.@SCRATCH1
-039     setTimer.numero1
-039     setObjetivo.numero1
-039     @I2C_WRITE_1.P1
-03A     setTimer.numero2
-03A     setObjetivo.numero2
-03B-03C setTimer.mayor
-03B-03C setObjetivo.mayor
-03D-03E setTimer.menor
-03D-03E setObjetivo.menor
+031-032 pasoRapido
+033-034 homingVel
+035-036 finHomingVel
+037     stepIndex
+038-039 posicionActual
+03A-03B posicionObjetivo
+03C     @I2C_STATE
+03D     @delay_ms1.P1
+03D     MAIN.@SCRATCH1
+03E     SSP_isr.incoming
+03E     TIMER1_isr.@SCRATCH1
+03F     @I2C_WRITE_1.P1
+03F     setTimer.numero1
+03F     setObjetivo.numero1
+040     setTimer.numero2
+040     setObjetivo.numero2
+041-042 setTimer.mayor
+041-042 setObjetivo.mayor
+043-044 setObjetivo.menor
+043-044 setTimer.menor
 077     @SCRATCH
 078     @SCRATCH
 078     _RETURN_
@@ -50,6 +54,7 @@
 085     TRISA
 086     TRISB
 087     TRISC
+093     SSPADD
 0FF     @INTERRUPT_AREA
 107.6   C1OUT
 108.6   C2OUT
@@ -87,6 +92,7 @@ F7F     @INTERRUPT_AREA
 FFF     @INTERRUPT_AREA
 
 ROM Allocation:
+017A  @delay_ms1
 00AB  @I2C_WRITE_1
 003A  STEP
 0080  setObjetivo
@@ -94,8 +100,8 @@ ROM Allocation:
 00CF  interpreta
 0046  TIMER1_isr
 0096  SSP_isr
-017A  MAIN
-017A  @cinit
+018E  MAIN
+018E  @cinit
 
 
 User Memory space: 
@@ -103,15 +109,15 @@ User Memory space:
 User Memory space: 
 
 Project Directory:
-    C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\2SlaveUpRight\
+    C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\
 
 Project Files:
-    graffitiRobotSlave2.c
-    graffitiRobotSlave2.h
-    ..\..\..\..\..\..\..\..\Program Files\PICC\devices\16F886.h
+    graffitiRobotSlave.c
+    graffitiRobotSlave.h
+    ..\..\..\..\..\..\..\Program Files\PICC\devices\16F886.h
 
 Units:
-    C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\2SlaveUpRight\graffitiRobotSlave2 (main)
+    C:\Users\Nahuel\Documents\GitHub\microcontroladores\graffitiRobot\graffitiRobotSlave\graffitiRobotSlave (main)
 
 Compiler Settings:
     Processor:      PIC16F886
@@ -122,12 +128,12 @@ Compiler Settings:
     Float,Double:   32,32
 
 Output Files:
-    Errors:      graffitiRobotSlave2.err
-    Ext Symbols: graffitiRobotSlave2.esym
-    INHX8:       graffitiRobotSlave2.hex
-    Symbols:     graffitiRobotSlave2.sym
-    List:        graffitiRobotSlave2.lst
-    Debug/COFF:  graffitiRobotSlave2.cof
-    Project:     graffitiRobotSlave2.PJT
-    Call Tree:   graffitiRobotSlave2.tre
-    Statistics:  graffitiRobotSlave2.sta
+    Errors:      graffitiRobotSlave.err
+    Ext Symbols: graffitiRobotSlave.esym
+    INHX8:       graffitiRobotSlave.hex
+    Symbols:     graffitiRobotSlave.sym
+    List:        graffitiRobotSlave.lst
+    Debug/COFF:  graffitiRobotSlave.cof
+    Project:     graffitiRobotSlave.PJT
+    Call Tree:   graffitiRobotSlave.tre
+    Statistics:  graffitiRobotSlave.sta
